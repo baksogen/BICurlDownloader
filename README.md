@@ -28,7 +28,7 @@ Add the following dependency to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/YourUsername/BICurlDownloader.git", from: "1.0.0")
+    .package(url: "https://github.com/baksogen/BICurlDownloader.git", from: "1.0.0")
 ]
 ```
 
@@ -368,7 +368,7 @@ We welcome contributions to the project! Please check [CONTRIBUTING.md](CONTRIBU
 
 ## Support
 
-- GitHub Issues: [https://github.com/YourUsername/BICurlDownloader/issues](https://github.com/YourUsername/BICurlDownloader/issues)
+- GitHub Issues: [https://github.com/baksogen/BICurlDownloader/issues](https://github.com/baksogen/BICurlDownloader/issues)
 - Email: support@example.com
 - Documentation: [https://bicurldownloader.docs.com](https://bicurldownloader.docs.com)
 
