@@ -30,6 +30,7 @@ let package = Package(
                 "Core/",
                 "Background/",
                 "Network/",
+				"Notifications/",
                 "Storage/",
                 "Utilities/"
             ],
