@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshooting - BICurlDownloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>BICurlDownloader</h1>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="overview.html">Overview</a></li>
+                    <li><a href="installation.html">Installation</a></li>
+                    <li><a href="quick-start.html">Quick Start</a></li>
+                    <li><a href="core-components.html">Core Components</a></li>
+                    <li><a href="usage-examples.html">Usage Examples</a></li>
+                    <li><a href="background-download.html">Background Download</a></li>
+                    <li><a href="multipart-download.html">Multipart Download</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="error-handling.html">Error Handling</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="api-reference.html">API Reference</a></li>
+                    <li><a href="advanced-examples.html">Advanced Examples</a></li>
+                    <li><a href="best-practices.html">Best Practices</a></li>
+                    <li><a href="troubleshooting.html" class="active">Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1>Troubleshooting</h1>
+            <p class="subtitle">Common issues and solutions</p>
+
+            <section id="background-stops">
+                <h2>Downloads Stop in Background</h2>
+                <p><strong>Problem:</strong> Downloads pause when app enters background.</p>
+                <p><strong>Solutions:</strong></p>
+                <ul>
+                    <li>Verify Background Modes capability is enabled</li>
+                    <li>Check "Audio, AirPlay, and Picture in Picture" is selected</li>
+                    <li>Ensure <code>enableBackgroundAudio = true</code> in options</li>
+                    <li>Check device is not in Low Power Mode</li>
+                    <li>Verify background refresh is enabled in Settings</li>
+                </ul>
+                
+                <pre><code>// Check capability
+let isAvailable = BIDownloadManager.shared.checkBackgroundAudioAvailability()
+if !isAvailable {
+    print("Background downloads not available")
+}</code></pre>
+            </section>
+
+            <section id="slow-downloads">
+                <h2>Slow Download Speed</h2>
+                <p><strong>Problem:</strong> Downloads are slower than expected.</p>
+                <p><strong>Solutions:</strong></p>
+                <ul>
+                    <li>Increase concurrent streams: <code>maxConcurrentStreams = 8</code></li>
+                    <li>Check if server supports Range requests</li>
+                    <li>Verify network connection quality</li>
+                    <li>Reduce number of concurrent downloads</li>
+                    <li>Check if server is throttling connections</li>
+                </ul>
+            </section>
+
+            <section id="auth-fails">
+                <h2>Authentication Fails</h2>
+                <p><strong>Problem:</strong> Getting 401 or 403 errors.</p>
+                <p><strong>Solutions:</strong></p>
+                <ul>
+                    <li>Verify credentials are correct</li>
+                    <li>Check authentication type matches server requirements</li>
+                    <li>Refresh expired tokens</li>
+                    <li>Ensure proper headers are sent</li>
+                </ul>
+                
+                <pre><code>// Enable logging to see requests
+var config = BIDownloadManagerConfiguration()
+config.enableLogging = true
+config.logLevel = .verbose
+BIDownloadManager.shared.configure(config)</code></pre>
+            </section>
+
+            <section id="multipart-not-working">
+                <h2>Multipart Download Not Active</h2>
+                <p><strong>Problem:</strong> Files download in single thread mode.</p>
+                <p><strong>Possible Causes:</strong></p>
+                <ul>
+                    <li>Server doesn't support Range requests</li>
+                    <li>File size is less than 5 MB</li>
+                    <li>Content-Length header is missing</li>
+                    <li><code>enableMultipart = false</code> in options</li>
+                </ul>
+                
+                <p><strong>Check:</strong></p>
+                <pre><code>// Test server support
+curl -I https://your-server.com/file.zip
+// Look for: Accept-Ranges: bytes</code></pre>
+            </section>
+
+            <section id="memory-issues">
+                <h2>Memory Warnings or Crashes</h2>
+                <p><strong>Problem:</strong> App receives memory warnings during downloads.</p>
+                <p><strong>Solutions:</strong></p>
+                <ul>
+                    <li>Reduce <code>maxConcurrentDownloads</code></li>
+                    <li>Reduce <code>maxConcurrentStreams</code></li>
+                    <li>Cancel unused downloads</li>
+                    <li>Remove strong references to completed tasks</li>
+                </ul>
+            </section>
+
+            <section id="incomplete-files">
+                <h2>Downloaded Files Are Incomplete</h2>
+                <p><strong>Problem:</strong> Files download but are corrupted or incomplete.</p>
+                <p><strong>Solutions:</strong></p>
+                <ul>
+                    <li>Check available disk space</li>
+                    <li>Verify server sends correct Content-Length</li>
+                    <li>Try disabling multipart: <code>enableMultipart = false</code></li>
+                    <li>Check network stability</li>
+                </ul>
+            </section>
+
+            <section id="enable-logging">
+                <h2>Enable Debug Logging</h2>
+                <p>For any issue, enable verbose logging first:</p>
+                <pre><code>var config = BIDownloadManagerConfiguration()
+config.enableLogging = true
+config.logLevel = .verbose
+BIDownloadManager.shared.configure(config)
+
+// Check Console.app or Xcode console for detailed logs</code></pre>
+            </section>
+
+            <section id="faq">
+                <h2>FAQ</h2>
+                
+                <h3>Q: Can I download to iCloud Drive?</h3>
+                <p>A: Yes, use the iCloud container path as destination.</p>
+                
+                <h3>Q: Does it work with cellular data?</h3>
+                <p>A: Yes, set <code>allowsCellularAccess = true</code>.</p>
+                
+                <h3>Q: Can I download multiple files simultaneously?</h3>
+                <p>A: Yes, configure <code>maxConcurrentDownloads</code> in configuration.</p>
+                
+                <h3>Q: How do I resume a failed download?</h3>
+                <p>A: Simply call download() again with the same URL and path.</p>
+                
+                <h3>Q: Does it support proxy servers?</h3>
+                <p>A: Yes, cURL respects system proxy settings automatically.</p>
+            </section>
+
+            <section id="getting-help">
+                <h2>Getting Help</h2>
+                
+                <p>If you're still experiencing issues:</p>
+                <ul>
+                    <li>Check this documentation thoroughly</li>
+                    <li>Enable verbose logging and examine output</li>
+                    <li>Search for similar issues on GitHub</li>
+                    <li>Create a detailed issue report with:
+                        <ul>
+                            <li>iOS version</li>
+                            <li>Framework version</li>
+                            <li>Complete error logs</li>
+                            <li>Minimal reproducible code</li>
+                            <li>Expected vs actual behavior</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <div class="alert alert-info">
+                    <strong>Support:</strong> For bugs and feature requests, please open an issue on GitHub with detailed information.
+                </div>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 BICurlDownloader. All rights reserved.</p>
+                <p>Documentation Version 1.0.0 | Framework Version 1.0.0</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

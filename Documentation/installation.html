@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installation - BICurlDownloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>BICurlDownloader</h1>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="overview.html">Overview</a></li>
+                    <li><a href="installation.html" class="active">Installation</a></li>
+                    <li><a href="quick-start.html">Quick Start</a></li>
+                    <li><a href="core-components.html">Core Components</a></li>
+                    <li><a href="usage-examples.html">Usage Examples</a></li>
+                    <li><a href="background-download.html">Background Download</a></li>
+                    <li><a href="multipart-download.html">Multipart Download</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="error-handling.html">Error Handling</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="api-reference.html">API Reference</a></li>
+                    <li><a href="advanced-examples.html">Advanced Examples</a></li>
+                    <li><a href="best-practices.html">Best Practices</a></li>
+                    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Installation</h1>
+            <p class="subtitle">Adding BICurlDownloader to Your Project</p>
+
+            <section id="requirements">
+                <h2>Requirements</h2>
+                <p>Before installing BICurlDownloader, ensure your project meets these requirements:</p>
+                
+                <table>
+                    <tr>
+                        <th>Requirement</th>
+                        <th>Minimum Version</th>
+                    </tr>
+                    <tr>
+                        <td>iOS Deployment Target</td>
+                        <td>13.0+</td>
+                    </tr>
+                    <tr>
+                        <td>Xcode</td>
+                        <td>12.0+</td>
+                    </tr>
+                    <tr>
+                        <td>Swift</td>
+                        <td>5.0+</td>
+                    </tr>
+                    <tr>
+                        <td>Objective-C</td>
+                        <td>Compatible</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="swift-package-manager">
+                <h2>Swift Package Manager</h2>
+                <p>Swift Package Manager is the recommended way to integrate BICurlDownloader.</p>
+
+                <h3>Using Xcode</h3>
+                <ol>
+                    <li>Open your project in Xcode</li>
+                    <li>Go to <code>File</code> → <code>Add Packages...</code></li>
+                    <li>Enter the repository URL:
+                        <pre><code>https://github.com/your-repo/BICurlDownloader.git</code></pre>
+                    </li>
+                    <li>Select the version rule (e.g., "Up to Next Major" with 1.0.0)</li>
+                    <li>Click <code>Add Package</code></li>
+                    <li>Select the target where you want to use BICurlDownloader</li>
+                    <li>Click <code>Add Package</code> again</li>
+                </ol>
+
+                <h3>Using Package.swift</h3>
+                <p>Add BICurlDownloader as a dependency in your <code>Package.swift</code>:</p>
+                <pre><code>dependencies: [
+    .package(url: "https://github.com/your-repo/BICurlDownloader.git", from: "1.0.0")
+]</code></pre>
+
+                <p>Then add it to your target dependencies:</p>
+                <pre><code>targets: [
+    .target(
+        name: "YourTarget",
+        dependencies: ["BICurlDownloader"]
+    )
+]</code></pre>
+            </section>
+
+            <section id="cocoapods">
+                <h2>CocoaPods</h2>
+                <p>If you prefer CocoaPods, add BICurlDownloader to your <code>Podfile</code>:</p>
+
+                <h3>Installation Steps</h3>
+                <ol>
+                    <li>If you don't have CocoaPods installed, install it:
+                        <pre><code>$ sudo gem install cocoapods</code></pre>
+                    </li>
+                    <li>Create or open your <code>Podfile</code> in the project root:
+                        <pre><code>$ pod init</code></pre>
+                    </li>
+                    <li>Add BICurlDownloader to your <code>Podfile</code>:
+                        <pre><code>platform :ios, '13.0'
+use_frameworks!
+
+target 'YourApp' do
+    pod 'BICurlDownloader', '~> 1.0.0'
+end</code></pre>
+                    </li>
+                    <li>Install the pod:
+                        <pre><code>$ pod install</code></pre>
+                    </li>
+                    <li>Open the generated <code>.xcworkspace</code> file:
+                        <pre><code>$ open YourApp.xcworkspace</code></pre>
+                    </li>
+                </ol>
+
+                <div class="alert alert-warning">
+                    <strong>Important:</strong> Always use the <code>.xcworkspace</code> file after installing pods, not the <code>.xcodeproj</code> file.
+                </div>
+            </section>
+
+            <section id="manual">
+                <h2>Manual Installation</h2>
+                <p>You can also manually add BICurlDownloader to your project.</p>
+
+                <h3>Using XCFramework</h3>
+                <ol>
+                    <li>Download the latest release from the <a href="#">releases page</a></li>
+                    <li>Unzip the downloaded file</li>
+                    <li>In Xcode, navigate to your project settings</li>
+                    <li>Select your app target</li>
+                    <li>Go to the <code>General</code> tab</li>
+                    <li>Scroll to <code>Frameworks, Libraries, and Embedded Content</code></li>
+                    <li>Click the <code>+</code> button</li>
+                    <li>Click <code>Add Other...</code> → <code>Add Files...</code></li>
+                    <li>Navigate to and select:
+                        <ul>
+                            <li><code>BICurlDownloader.xcframework</code></li>
+                            <li><code>curl.xcframework</code> (dependency)</li>
+                        </ul>
+                    </li>
+                    <li>Ensure both frameworks are set to <code>Embed & Sign</code></li>
+                </ol>
+
+                <h3>From Source</h3>
+                <ol>
+                    <li>Clone the repository:
+                        <pre><code>$ git clone https://github.com/your-repo/BICurlDownloader.git</code></pre>
+                    </li>
+                    <li>Drag the <code>BICurlDownloader.xcodeproj</code> into your Xcode project</li>
+                    <li>In your app target settings, go to <code>General</code> tab</li>
+                    <li>Add <code>BICurlDownloader.framework</code> to <code>Frameworks, Libraries, and Embedded Content</code></li>
+                    <li>Set it to <code>Embed & Sign</code></li>
+                </ol>
+            </section>
+
+            <section id="importing">
+                <h2>Importing the Framework</h2>
+
+                <h3>Swift</h3>
+                <pre><code>import BICurlDownloader
+
+class ViewController: UIViewController {
+    let manager = BIDownloadManager.shared
+    
+    // Your code here
+}</code></pre>
+
+                <h3>Objective-C</h3>
+                <pre><code>@import BICurlDownloader;
+
+@interface ViewController ()
+@property (nonatomic, strong) BIDownloadManager *manager;
+@end
+
+@implementation ViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.manager = [BIDownloadManager shared];
+    
+    // Your code here
+}
+
+@end</code></pre>
+            </section>
+
+            <section id="background-capability">
+                <h2>Enable Background Downloads (Optional)</h2>
+                <p>To enable background downloads when the app is not in foreground, you need to add the Background Modes capability.</p>
+
+                <h3>Steps to Enable</h3>
+                <ol>
+                    <li>Open your project in Xcode</li>
+                    <li>Select your app target</li>
+                    <li>Go to the <code>Signing & Capabilities</code> tab</li>
+                    <li>Click <code>+ Capability</code></li>
+                    <li>Add <code>Background Modes</code></li>
+                    <li>Enable <code>Audio, AirPlay, and Picture in Picture</code></li>
+                </ol>
+
+                <div class="alert alert-info">
+                    <strong>How it works:</strong><br>
+                    BICurlDownloader uses programmatically generated silent audio to keep the app active in the background, allowing downloads to continue. This is a legitimate use of the audio background mode.
+                </div>
+
+                <h3>Info.plist Configuration</h3>
+                <p>Xcode automatically adds the required keys to your <code>Info.plist</code>. Verify that it includes:</p>
+                <pre><code>&lt;key&gt;UIBackgroundModes&lt;/key&gt;
+&lt;array&gt;
+    &lt;string&gt;audio&lt;/string&gt;
+&lt;/array&gt;</code></pre>
+            </section>
+
+            <section id="verification">
+                <h2>Verify Installation</h2>
+                <p>To verify that BICurlDownloader is correctly installed, try this simple test:</p>
+
+                <h3>Swift</h3>
+                <pre><code>import BICurlDownloader
+
+// Check framework version
+print(BICurlDownloaderInfo.fullVersion)
+// Output: BICurlDownloader v1.0.0 (1)
+
+// Check if background audio is available
+let manager = BIDownloadManager.shared
+let isAvailable = manager.checkBackgroundAudioAvailability()
+print("Background downloads available: \(isAvailable)")</code></pre>
+
+                <h3>Objective-C</h3>
+                <pre><code>@import BICurlDownloader;
+
+// Check framework version
+NSLog(@"%@", [BICurlDownloaderInfo fullVersion]);
+// Output: BICurlDownloader v1.0.0 (1)
+
+// Check if background audio is available
+BIDownloadManager *manager = [BIDownloadManager shared];
+BOOL isAvailable = [manager checkBackgroundAudioAvailability];
+NSLog(@"Background downloads available: %@", isAvailable ? @"YES" : @"NO");</code></pre>
+
+                <div class="alert alert-success">
+                    <strong>Installation successful!</strong><br>
+                    If the code compiles and runs without errors, BICurlDownloader is correctly installed.
+                </div>
+            </section>
+
+            <section id="troubleshooting-install">
+                <h2>Installation Troubleshooting</h2>
+
+                <h3>Framework not found</h3>
+                <p><strong>Problem:</strong> Xcode cannot find the BICurlDownloader module.</p>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Clean build folder: <code>Product</code> → <code>Clean Build Folder</code></li>
+                    <li>Restart Xcode</li>
+                    <li>Verify the framework is properly linked in Build Phases</li>
+                </ul>
+
+                <h3>Missing curl.xcframework</h3>
+                <p><strong>Problem:</strong> Linker errors related to libcurl symbols.</p>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Ensure <code>curl.xcframework</code> is included in your project</li>
+                    <li>Check that it's added to "Frameworks, Libraries, and Embedded Content"</li>
+                    <li>Verify the framework search paths are correct</li>
+                </ul>
+
+                <h3>Swift/Objective-C Bridging Issues</h3>
+                <p><strong>Problem:</strong> Cannot use framework in Objective-C project.</p>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Ensure you're using <code>@import BICurlDownloader;</code> not <code>#import</code></li>
+                    <li>Enable "Always Embed Swift Standard Libraries" in Build Settings</li>
+                    <li>Check that your deployment target is iOS 13.0+</li>
+                </ul>
+
+                <h3>CocoaPods Installation Fails</h3>
+                <p><strong>Problem:</strong> <code>pod install</code> command fails.</p>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Update CocoaPods: <code>$ sudo gem install cocoapods</code></li>
+                    <li>Update pod repository: <code>$ pod repo update</code></li>
+                    <li>Try: <code>$ pod install --repo-update</code></li>
+                </ul>
+            </section>
+
+            <section id="next-steps">
+                <h2>Next Steps</h2>
+                
+                <div class="alert alert-success">
+                    <strong>Installation Complete!</strong><br>
+                    Continue to the <a href="quick-start.html">Quick Start Guide</a> to start using BICurlDownloader in your app.
+                </div>
+
+                <p>Additional resources:</p>
+                <ul>
+                    <li><a href="core-components.html">Learn about Core Components</a></li>
+                    <li><a href="usage-examples.html">Browse Usage Examples</a></li>
+                    <li><a href="api-reference.html">Read the API Reference</a></li>
+                </ul>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 BICurlDownloader. All rights reserved.</p>
+                <p>Documentation Version 1.0.0 | Framework Version 1.0.0</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

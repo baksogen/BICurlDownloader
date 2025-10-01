@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overview - BICurlDownloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>BICurlDownloader</h1>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="overview.html" class="active">Overview</a></li>
+                    <li><a href="installation.html">Installation</a></li>
+                    <li><a href="quick-start.html">Quick Start</a></li>
+                    <li><a href="core-components.html">Core Components</a></li>
+                    <li><a href="usage-examples.html">Usage Examples</a></li>
+                    <li><a href="background-download.html">Background Download</a></li>
+                    <li><a href="multipart-download.html">Multipart Download</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="error-handling.html">Error Handling</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="api-reference.html">API Reference</a></li>
+                    <li><a href="advanced-examples.html">Advanced Examples</a></li>
+                    <li><a href="best-practices.html">Best Practices</a></li>
+                    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Overview</h1>
+            <p class="subtitle">Understanding BICurlDownloader Framework</p>
+
+            <section id="introduction">
+                <h2>Introduction</h2>
+                <p>BICurlDownloader is a powerful and flexible iOS framework designed for efficient file downloads. Built on top of the system's libcurl library, it provides a modern Swift/Objective-C interface for managing downloads with advanced features like multipart downloading, background execution, and comprehensive error handling.</p>
+
+                <div class="alert alert-info">
+                    <strong>Why BICurlDownloader?</strong><br>
+                    Unlike URLSession-based solutions, BICurlDownloader leverages libcurl's proven reliability and offers fine-grained control over download operations, making it ideal for applications requiring robust download management.
+                </div>
+            </section>
+
+            <section id="key-features">
+                <h2>Key Features</h2>
+
+                <h3>Core Functionality</h3>
+                <ul>
+                    <li><strong>System libcurl Integration</strong> - Direct access to libcurl's powerful features</li>
+                    <li><strong>Multipart Downloads</strong> - Automatic file splitting for optimal download speeds</li>
+                    <li><strong>Background Downloads</strong> - Continue downloads when app is backgrounded</li>
+                    <li><strong>Resume Support</strong> - Pick up downloads from where they left off</li>
+                    <li><strong>Progress Monitoring</strong> - Real-time progress updates and statistics</li>
+                </ul>
+
+                <h3>Download Management</h3>
+                <ul>
+                    <li><strong>Queue Management</strong> - Control concurrent downloads with priority queuing</li>
+                    <li><strong>Pause/Resume</strong> - Full control over download lifecycle</li>
+                    <li><strong>Cancellation</strong> - Clean cancellation with resource cleanup</li>
+                    <li><strong>Speed Throttling</strong> - Limit download speeds when needed</li>
+                    <li><strong>Task Tagging</strong> - Organize downloads with custom notes</li>
+                </ul>
+
+                <h3>Network Features</h3>
+                <ul>
+                    <li><strong>Range Request Support</strong> - Automatic detection of server capabilities</li>
+                    <li><strong>Authentication</strong> - Basic, Digest, Bearer, and custom auth methods</li>
+                    <li><strong>Custom Headers</strong> - Add any HTTP headers to requests</li>
+                    <li><strong>SSL/TLS Verification</strong> - Secure downloads with certificate validation</li>
+                    <li><strong>Redirect Handling</strong> - Automatic following of redirects</li>
+                </ul>
+
+                <h3>Background Operations</h3>
+                <ul>
+                    <li><strong>Silent Audio</strong> - Programmatically generated audio keeps app alive</li>
+                    <li><strong>Audio Session Management</strong> - Seamless integration with app's audio</li>
+                    <li><strong>Interruption Handling</strong> - Graceful handling of audio interruptions</li>
+                    <li><strong>Mixing Support</strong> - Works alongside other audio playback</li>
+                </ul>
+            </section>
+
+            <section id="architecture">
+                <h2>Architecture</h2>
+                
+                <h3>Framework Structure</h3>
+                <pre><code>BICurlDownloader/
+├── Core/
+│   ├── BIDownloadManager.swift       // Main download manager
+│   ├── BIDownloadTask.swift          // Individual download task
+│   ├── BIMultipartDownloader.swift   // Multipart download handler
+│   └── BICURLWrapper.swift           // cURL interface wrapper
+├── Background/
+│   ├── BIBackgroundAudioManager.swift     // Background audio control
+│   ├── BISilentAudioGenerator.swift       // Silent audio generation
+│   └── BIAudioSessionCoordinator.swift    // Audio session management
+├── Network/
+│   ├── BIServerCapabilities.swift         // Server feature detection
+│   ├── BIRangeRequestValidator.swift      // Range request validation
+│   ├── BINetworkMonitor.swift             // Network monitoring
+│   └── BIAuthenticationManager.swift      // Authentication handling
+├── Storage/
+│   ├── BIFileManager.swift                // File operations
+│   └── BIDownloadStateManager.swift       // State persistence
+└── Utilities/
+    ├── BILogger.swift                     // Logging system
+    └── BIExtensions.swift                 // Helper extensions</code></pre>
+
+                <h3>Component Interaction</h3>
+                <p>The framework follows a modular architecture where components work together:</p>
+                <ol>
+                    <li><strong>BIDownloadManager</strong> manages the overall download queue and coordinates between tasks</li>
+                    <li><strong>BIDownloadTask</strong> represents individual downloads and manages their lifecycle</li>
+                    <li><strong>BIMultipartDownloader</strong> handles the actual download logic, including multipart splitting</li>
+                    <li><strong>BIBackgroundAudioManager</strong> ensures downloads continue in the background</li>
+                    <li><strong>Network components</strong> handle server communication and validation</li>
+                </ol>
+            </section>
+
+            <section id="workflow">
+                <h2>Download Workflow</h2>
+                
+                <h3>Standard Download Flow</h3>
+                <ol>
+                    <li><strong>Task Creation</strong> - Create a download task with URL and destination</li>
+                    <li><strong>Server Check</strong> - Validate server capabilities (Range support, content length)</li>
+                    <li><strong>Strategy Selection</strong> - Choose single or multipart download based on conditions</li>
+                    <li><strong>Download Execution</strong> - Begin downloading with progress updates</li>
+                    <li><strong>Completion</strong> - Finalize download and notify delegate</li>
+                </ol>
+
+                <h3>Multipart Download Flow</h3>
+                <ol>
+                    <li><strong>Capability Detection</strong> - Verify Range request support</li>
+                    <li><strong>File Splitting</strong> - Divide file into optimal chunks</li>
+                    <li><strong>Parallel Download</strong> - Download chunks simultaneously</li>
+                    <li><strong>Progress Aggregation</strong> - Combine progress from all chunks</li>
+                    <li><strong>File Assembly</strong> - Merge chunks into final file</li>
+                </ol>
+
+                <h3>Background Download Flow</h3>
+                <ol>
+                    <li><strong>App Backgrounding</strong> - Detect app entering background</li>
+                    <li><strong>Audio Activation</strong> - Start silent audio playback</li>
+                    <li><strong>Download Continuation</strong> - Downloads continue normally</li>
+                    <li><strong>Interruption Handling</strong> - Handle phone calls, etc.</li>
+                    <li><strong>Foreground Return</strong> - Stop audio when app returns</li>
+                </ol>
+            </section>
+
+            <section id="design-principles">
+                <h2>Design Principles</h2>
+
+                <h3>1. Ease of Use</h3>
+                <p>The framework provides simple APIs for common tasks while exposing advanced options for complex scenarios:</p>
+                <pre><code>// Simple download
+let task = BIDownloadManager.shared.download(url: url, destinationPath: path)
+
+// Advanced download with options
+let task = manager.download(url: url, destinationPath: path, options: customOptions)</code></pre>
+
+                <h3>2. Performance</h3>
+                <p>Optimized for performance with:</p>
+                <ul>
+                    <li>Efficient memory usage through buffered I/O</li>
+                    <li>Adaptive multipart downloading</li>
+                    <li>Smart network utilization</li>
+                    <li>Minimal battery impact in background mode</li>
+                </ul>
+
+                <h3>3. Reliability</h3>
+                <p>Built for reliability with:</p>
+                <ul>
+                    <li>Comprehensive error handling</li>
+                    <li>Automatic retry mechanisms</li>
+                    <li>State persistence</li>
+                    <li>Resource cleanup</li>
+                </ul>
+
+                <h3>4. Flexibility</h3>
+                <p>Flexible design allows:</p>
+                <ul>
+                    <li>Custom authentication methods</li>
+                    <li>Configurable download strategies</li>
+                    <li>Extensible architecture</li>
+                    <li>Integration with existing code</li>
+                </ul>
+            </section>
+
+            <section id="use-cases">
+                <h2>Common Use Cases</h2>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>Media Applications</h4>
+                        <p>Download music, videos, podcasts for offline playback with background download support.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Document Management</h4>
+                        <p>Download large documents, PDFs, archives with resume capability.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Content Sync</h4>
+                        <p>Synchronize large amounts of data with queue management and progress tracking.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>App Updates</h4>
+                        <p>Download app resources, assets, or content updates efficiently.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Backup Solutions</h4>
+                        <p>Download backup files from servers with authentication support.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>File Sharing</h4>
+                        <p>Download shared files from cloud services with custom auth.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="platform-support">
+                <h2>Platform Support</h2>
+                
+                <table>
+                    <tr>
+                        <th>Feature</th>
+                        <th>iOS 13+</th>
+                        <th>Notes</th>
+                    </tr>
+                    <tr>
+                        <td>Basic Downloads</td>
+                        <td>✅</td>
+                        <td>Fully supported</td>
+                    </tr>
+                    <tr>
+                        <td>Multipart Downloads</td>
+                        <td>✅</td>
+                        <td>Fully supported</td>
+                    </tr>
+                    <tr>
+                        <td>Background Audio</td>
+                        <td>✅</td>
+                        <td>Requires Background Modes capability</td>
+                    </tr>
+                    <tr>
+                        <td>Authentication</td>
+                        <td>✅</td>
+                        <td>All auth methods supported</td>
+                    </tr>
+                    <tr>
+                        <td>Network Monitoring</td>
+                        <td>✅</td>
+                        <td>iOS 12+ for Network framework</td>
+                    </tr>
+                    <tr>
+                        <td>Swift Support</td>
+                        <td>✅</td>
+                        <td>Swift 5.0+</td>
+                    </tr>
+                    <tr>
+                        <td>Objective-C Support</td>
+                        <td>✅</td>
+                        <td>Full bridging support</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="next-steps">
+                <h2>Next Steps</h2>
+                
+                <div class="alert alert-success">
+                    <strong>Ready to get started?</strong><br>
+                    Continue to the <a href="installation.html">Installation Guide</a> to add BICurlDownloader to your project.
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>New to the framework?</strong><br>
+                    Check out the <a href="quick-start.html">Quick Start Guide</a> for a hands-on introduction.
+                </div>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 BICurlDownloader. All rights reserved.</p>
+                <p>Documentation Version 1.0.0 | Framework Version 1.0.0</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

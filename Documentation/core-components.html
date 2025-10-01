@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Components - BICurlDownloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>BICurlDownloader</h1>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="overview.html">Overview</a></li>
+                    <li><a href="installation.html">Installation</a></li>
+                    <li><a href="quick-start.html">Quick Start</a></li>
+                    <li><a href="core-components.html" class="active">Core Components</a></li>
+                    <li><a href="usage-examples.html">Usage Examples</a></li>
+                    <li><a href="background-download.html">Background Download</a></li>
+                    <li><a href="multipart-download.html">Multipart Download</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="error-handling.html">Error Handling</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="api-reference.html">API Reference</a></li>
+                    <li><a href="advanced-examples.html">Advanced Examples</a></li>
+                    <li><a href="best-practices.html">Best Practices</a></li>
+                    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Core Components</h1>
+            <p class="subtitle">Understanding the Framework Architecture</p>
+
+            <section id="architecture-overview">
+                <h2>Architecture Overview</h2>
+                <p>BICurlDownloader is built on a modular architecture with clearly separated concerns. Each component has a specific responsibility and communicates with other components through well-defined interfaces.</p>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>Core Layer</h4>
+                        <p>Download management, task coordination, and cURL integration</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Background Layer</h4>
+                        <p>Silent audio generation and audio session management</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Network Layer</h4>
+                        <p>Server capabilities detection and network monitoring</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Storage Layer</h4>
+                        <p>File operations and state persistence</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="bidownloadmanager">
+                <h2>BIDownloadManager</h2>
+                <p>The central coordinator for all download operations. This singleton class manages the download queue, task lifecycle, and resource allocation.</p>
+
+                <h3>Responsibilities</h3>
+                <ul>
+                    <li>Managing the global download queue</li>
+                    <li>Enforcing concurrent download limits</li>
+                    <li>Coordinating background audio activation</li>
+                    <li>Providing task lookup and filtering</li>
+                    <li>Broadcasting state changes via notifications</li>
+                </ul>
+
+                <h3>Key Features</h3>
+                <pre><code>// Singleton access
+let manager = BIDownloadManager.shared
+
+// Configure global settings
+var config = BIDownloadManagerConfiguration()
+config.maxConcurrentDownloads = 3
+config.enableLogging = true
+manager.configure(config)
+
+// Create and manage tasks
+let task = manager.download(url: url, destinationPath: path)
+
+// Query tasks
+let activeTasks = manager.getActiveTasks()
+let queuedTasks = manager.getQueuedTasks()
+
+// Bulk operations
+manager.pauseAll()
+manager.resumeAll()
+manager.cancelAll()</code></pre>
+
+                <h3>Task Queue Management</h3>
+                <p>The manager maintains two internal collections:</p>
+                <ul>
+                    <li><strong>Active Tasks</strong> - Currently downloading (up to maxConcurrentDownloads)</li>
+                    <li><strong>Task Queue</strong> - Waiting tasks that will start when slots become available</li>
+                </ul>
+
+                <p>When a task completes, fails, or is paused, the manager automatically starts the next queued task.</p>
+            </section>
+
+            <section id="bidownloadtask">
+                <h2>BIDownloadTask</h2>
+                <p>Represents an individual download operation. Each task encapsulates the download URL, destination, options, and current state.</p>
+
+                <h3>Task Lifecycle</h3>
+                <ol>
+                    <li><strong>Creation</strong> - Task is created via BIDownloadManager</li>
+                    <li><strong>Pending</strong> - Task is queued and waiting to start</li>
+                    <li><strong>Server Check</strong> - Capabilities are validated (Range support, content length)</li>
+                    <li><strong>Downloading</strong> - Active download with progress updates</li>
+                    <li><strong>Terminal States</strong> - Completed, Failed, or Cancelled</li>
+                </ol>
+
+                <h3>State Transitions</h3>
+                <pre><code>pending → downloading → completed
+        ↓               ↓
+        ↓               → paused → downloading
+        ↓               ↓
+        → cancelled     → failed
+                        ↓
+                        → cancelled</code></pre>
+
+                <h3>Properties and Methods</h3>
+                <pre><code>// Properties
+task.id              // Unique identifier
+task.url             // Download URL
+task.state           // Current state
+task.progress        // Progress object
+task.note            // Custom tag/label
+
+// Control methods
+task.pause()         // Pause download
+task.resume()        // Resume download
+task.cancel()        // Cancel download
+
+// Delegate
+task.delegate = self // Set delegate for callbacks</code></pre>
+
+                <h3>Progress Tracking</h3>
+                <p>Each task provides a standard Foundation <code>Progress</code> object:</p>
+                <pre><code>let progress = task.progress
+print("Downloaded: \(progress.completedUnitCount) bytes")
+print("Total: \(progress.totalUnitCount) bytes")
+print("Percentage: \(progress.fractionCompleted * 100)%")</code></pre>
+            </section>
+
+            <section id="bimultipartdownloader">
+                <h2>BIMultipartDownloader</h2>
+                <p>Internal component that handles the actual download logic, including multipart splitting and parallel chunk downloads.</p>
+
+                <h3>Download Strategy Selection</h3>
+                <p>The downloader automatically chooses between single-threaded and multipart downloads based on:</p>
+                <ul>
+                    <li>Server support for Range requests (Accept-Ranges header)</li>
+                    <li>Known content length (Content-Length header)</li>
+                    <li>File size threshold (minimum 5 MB for multipart)</li>
+                    <li>User configuration (enableMultipart option)</li>
+                </ul>
+
+                <h3>Multipart Algorithm</h3>
+                <ol>
+                    <li>Determine optimal chunk count (based on file size and network speed)</li>
+                    <li>Calculate byte ranges for each chunk</li>
+                    <li>Start parallel downloads for each chunk</li>
+                    <li>Aggregate progress from all chunks</li>
+                    <li>Assemble chunks into final file</li>
+                    <li>Verify file integrity</li>
+                </ol>
+
+                <h3>Chunk Management</h3>
+                <pre><code>// Example chunk calculation for 100 MB file with 4 streams
+Chunk 0: bytes 0-26214399     (25 MB)
+Chunk 1: bytes 26214400-52428799   (25 MB)
+Chunk 2: bytes 52428800-78643199   (25 MB)
+Chunk 3: bytes 78643200-104857599  (25 MB)</code></pre>
+
+                <div class="alert alert-info">
+                    <strong>Note:</strong> The multipart downloader uses adaptive chunking. It may adjust the number of chunks based on network performance and server response times.
+                </div>
+            </section>
+
+            <section id="bicurlwrapper">
+                <h2>BICURLWrapper</h2>
+                <p>Low-level interface to the system's libcurl library. This component abstracts cURL's C API into a Swift-friendly interface.</p>
+
+                <h3>Features</h3>
+                <ul>
+                    <li>Direct libcurl integration</li>
+                    <li>HTTP/HTTPS support with SSL/TLS</li>
+                    <li>Range request support</li>
+                    <li>Custom header injection</li>
+                    <li>Authentication handling</li>
+                    <li>Progress callbacks</li>
+                    <li>Timeout management</li>
+                </ul>
+
+                <h3>cURL Configuration</h3>
+                <p>The wrapper configures cURL with optimal settings:</p>
+                <pre><code>CURLOPT_FOLLOWLOCATION: 1    // Follow redirects
+CURLOPT_MAXREDIRS: 10        // Max redirect count
+CURLOPT_TIMEOUT: 60          // Connection timeout
+CURLOPT_SSL_VERIFYPEER: 1    // Verify SSL certificates
+CURLOPT_USERAGENT: "BICurlDownloader/1.0"</code></pre>
+            </section>
+
+            <section id="background-components">
+                <h2>Background Audio Components</h2>
+
+                <h3>BIBackgroundAudioManager</h3>
+                <p>Manages background audio playback to keep the app active when backgrounded.</p>
+
+                <h4>How It Works</h4>
+                <ol>
+                    <li>Detects when app enters background</li>
+                    <li>Starts silent audio generation</li>
+                    <li>Monitors audio session interruptions</li>
+                    <li>Stops audio when app returns to foreground or all downloads complete</li>
+                </ol>
+
+                <h3>BISilentAudioGenerator</h3>
+                <p>Generates programmatic silent audio using AVAudioEngine.</p>
+
+                <h4>Technical Details</h4>
+                <ul>
+                    <li><strong>Frequency</strong>: ~20 Hz (below human hearing range)</li>
+                    <li><strong>Amplitude</strong>: Near zero (imperceptible)</li>
+                    <li><strong>Format</strong>: PCM 16-bit stereo</li>
+                    <li><strong>Sample Rate</strong>: 44.1 kHz</li>
+                </ul>
+
+                <pre><code>// Internal audio generation
+let format = AVAudioFormat(
+    standardFormatWithSampleRate: 44100,
+    channels: 2
+)
+let buffer = generateSilentBuffer(duration: 1.0)
+audioEngine.scheduleBuffer(buffer, repeating: true)</code></pre>
+
+                <h3>BIAudioSessionCoordinator</h3>
+                <p>Coordinates with the app's main audio session to avoid conflicts.</p>
+
+                <h4>Features</h4>
+                <ul>
+                    <li>Uses <code>AVAudioSessionCategoryOptionMixWithOthers</code> for parallel playback</li>
+                    <li>Monitors audio session state changes</li>
+                    <li>Handles interruptions (phone calls, alarms)</li>
+                    <li>Gracefully deactivates during high-priority audio events</li>
+                </ul>
+            </section>
+
+            <section id="network-components">
+                <h2>Network Components</h2>
+
+                <h3>BIServerCapabilities</h3>
+                <p>Determines what features the server supports before downloading.</p>
+
+                <h4>Detected Capabilities</h4>
+                <ul>
+                    <li><strong>Range Requests</strong> - Accept-Ranges: bytes</li>
+                    <li><strong>Content Length</strong> - Total file size</li>
+                    <li><strong>Content Type</strong> - MIME type</li>
+                    <li><strong>ETag</strong> - Resource version identifier</li>
+                    <li><strong>Last-Modified</strong> - File modification date</li>
+                    <li><strong>Redirects</strong> - Final effective URL</li>
+                </ul>
+
+                <h4>Detection Process</h4>
+                <pre><code>// HEAD request to check capabilities
+HEAD /file.zip HTTP/1.1
+Host: example.com
+
+// Response
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Content-Length: 104857600
+Content-Type: application/zip
+ETag: "abc123"</code></pre>
+
+                <h3>BIRangeRequestValidator</h3>
+                <p>Validates that the server correctly implements Range request support.</p>
+
+                <h4>Validation Tests</h4>
+                <ol>
+                    <li>Sends test Range request</li>
+                    <li>Verifies 206 Partial Content response</li>
+                    <li>Checks Content-Range header format</li>
+                    <li>Validates byte range accuracy</li>
+                </ol>
+
+                <h3>BINetworkMonitor</h3>
+                <p>Monitors network connectivity and quality using the Network framework.</p>
+
+                <h4>Monitored Conditions</h4>
+                <ul>
+                    <li>Network availability (connected/disconnected)</li>
+                    <li>Connection type (WiFi, Cellular, Wired)</li>
+                    <li>Cellular data status</li>
+                    <li>Expensive network detection</li>
+                    <li>Constrained network detection</li>
+                </ul>
+
+                <pre><code>// Usage example
+let monitor = BINetworkMonitor()
+monitor.pathUpdateHandler = { path in
+    if path.status == .satisfied {
+        if path.usesInterfaceType(.wifi) {
+            // WiFi available - start large downloads
+        } else if path.usesInterfaceType(.cellular) {
+            // Cellular - limit downloads
+        }
+    }
+}</code></pre>
+            </section>
+
+            <section id="storage-components">
+                <h2>Storage Components</h2>
+
+                <h3>BIFileManager</h3>
+                <p>Handles all file system operations with error handling and validation.</p>
+
+                <h4>Operations</h4>
+                <ul>
+                    <li>File creation and deletion</li>
+                    <li>Directory management</li>
+                    <li>Free space checking</li>
+                    <li>File attribute management</li>
+                    <li>Temporary file handling</li>
+                    <li>Atomic file operations</li>
+                </ul>
+
+                <h3>BIDownloadStateManager</h3>
+                <p>Persists download state for resume capability.</p>
+
+                <h4>Persisted Information</h4>
+                <ul>
+                    <li>Download URL and destination</li>
+                    <li>Bytes downloaded so far</li>
+                    <li>Total file size</li>
+                    <li>Chunk information (for multipart)</li>
+                    <li>ETag and Last-Modified (for validation)</li>
+                </ul>
+            </section>
+
+            <section id="utility-components">
+                <h2>Utility Components</h2>
+
+                <h3>BILogger</h3>
+                <p>Centralized logging system with configurable verbosity levels.</p>
+
+                <h4>Log Levels</h4>
+                <table>
+                    <tr>
+                        <th>Level</th>
+                        <th>Use Case</th>
+                    </tr>
+                    <tr>
+                        <td>Verbose</td>
+                        <td>Every operation detail</td>
+                    </tr>
+                    <tr>
+                        <td>Debug</td>
+                        <td>Debug information</td>
+                    </tr>
+                    <tr>
+                        <td>Info</td>
+                        <td>General information</td>
+                    </tr>
+                    <tr>
+                        <td>Warning</td>
+                        <td>Non-critical issues</td>
+                    </tr>
+                    <tr>
+                        <td>Error</td>
+                        <td>Errors only</td>
+                    </tr>
+                    <tr>
+                        <td>None</td>
+                        <td>No logging</td>
+                    </tr>
+                </table>
+
+                <h4>Usage</h4>
+                <pre><code>let logger = BILogger.shared
+logger.verbose("Starting download")
+logger.debug("Chunk 1 completed")
+logger.info("Download started")
+logger.warning("Slow network detected")
+logger.error("Download failed")</code></pre>
+
+                <h3>BIExtensions</h3>
+                <p>Helper extensions for common operations.</p>
+
+                <h4>Included Extensions</h4>
+                <ul>
+                    <li>URL extensions for file handling</li>
+                    <li>String extensions for path manipulation</li>
+                    <li>Data extensions for file operations</li>
+                    <li>Progress extensions for formatting</li>
+                </ul>
+            </section>
+
+            <section id="component-interaction">
+                <h2>Component Interaction Flow</h2>
+
+                <h3>Download Initiation</h3>
+                <pre><code>User calls manager.download()
+    ↓
+BIDownloadManager creates BIDownloadTask
+    ↓
+Task added to queue
+    ↓
+BIDownloadManager starts task (if slots available)
+    ↓
+BIDownloadTask checks server capabilities
+    ↓
+BIServerCapabilities performs HEAD request
+    ↓
+BIMultipartDownloader created with strategy
+    ↓
+Download begins using BICURLWrapper
+    ↓
+Progress updates sent to delegate
+    ↓
+BIBackgroundAudioManager activated (if needed)
+    ↓
+Download completes
+    ↓
+BIFileManager finalizes file
+    ↓
+Task moves to completed state
+    ↓
+BIDownloadManager processes queue</code></pre>
+
+                <h3>Error Handling Flow</h3>
+                <pre><code>Error occurs in BICURLWrapper
+    ↓
+Error propagated to BIMultipartDownloader
+    ↓
+BIMultipartDownloader notifies BIDownloadTask
+    ↓
+Task state changes to failed
+    ↓
+Delegate receives downloadDidFail
+    ↓
+BIDownloadManager processes queue
+    ↓
+Resources cleaned up</code></pre>
+            </section>
+
+            <section id="thread-safety">
+                <h2>Thread Safety</h2>
+                <p>The framework is designed to be thread-safe with proper synchronization:</p>
+
+                <ul>
+                    <li><strong>NSLock</strong> - Used for protecting critical sections</li>
+                    <li><strong>DispatchQueue</strong> - Serial queues for ordered operations</li>
+                    <li><strong>@MainActor</strong> - UI updates always on main thread</li>
+                    <li><strong>Atomic Operations</strong> - State changes are atomic</li>
+                </ul>
+
+                <div class="alert alert-warning">
+                    <strong>Important:</strong> Always update UI from the main thread when receiving delegate callbacks. The framework dispatches callbacks on background threads for optimal performance.
+                </div>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 BICurlDownloader. All rights reserved.</p>
+                <p>Documentation Version 1.0.0 | Framework Version 1.0.0</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

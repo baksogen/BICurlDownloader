@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Start - BICurlDownloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>BICurlDownloader</h1>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="overview.html">Overview</a></li>
+                    <li><a href="installation.html">Installation</a></li>
+                    <li><a href="quick-start.html" class="active">Quick Start</a></li>
+                    <li><a href="core-components.html">Core Components</a></li>
+                    <li><a href="usage-examples.html">Usage Examples</a></li>
+                    <li><a href="background-download.html">Background Download</a></li>
+                    <li><a href="multipart-download.html">Multipart Download</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="error-handling.html">Error Handling</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="api-reference.html">API Reference</a></li>
+                    <li><a href="advanced-examples.html">Advanced Examples</a></li>
+                    <li><a href="best-practices.html">Best Practices</a></li>
+                    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Quick Start</h1>
+            <p class="subtitle">Get up and running with BICurlDownloader in minutes</p>
+
+            <section id="simplest-example">
+                <h2>Simplest Example</h2>
+                <p>The fastest way to download a file with BICurlDownloader:</p>
+
+                <h3>Swift</h3>
+                <pre><code>import BICurlDownloader
+
+let manager = BIDownloadManager.shared
+
+manager.quickDownload(
+    from: "https://example.com/file.zip",
+    to: "/path/to/destination/file.zip"
+) { result in
+    switch result {
+    case .success(let filePath):
+        print("Downloaded: \(filePath)")
+    case .failure(let error):
+        print("Error: \(error)")
+    }
+}</code></pre>
+
+                <h3>Objective-C</h3>
+                <pre><code>@import BICurlDownloader;
+
+BIDownloadManager *manager = [BIDownloadManager shared];
+
+[manager quickDownloadFromString:@"https://example.com/file.zip"
+                 destinationPath:@"/path/to/destination/file.zip"
+                      completion:^(NSString *filePath, NSError *error) {
+    if (filePath) {
+        NSLog(@"Downloaded: %@", filePath);
+    } else {
+        NSLog(@"Error: %@", error);
+    }
+}];</code></pre>
+            </section>
+
+            <section id="basic-download">
+                <h2>Basic Download with Delegate</h2>
+                <p>For more control over the download process, use the delegate pattern:</p>
+
+                <h3>Swift</h3>
+                <pre><code>import BICurlDownloader
+
+class DownloadViewController: UIViewController {
+    var downloadTask: BIDownloadTask?
+    
+    func startDownload() {
+        let manager = BIDownloadManager.shared
+        let url = URL(string: "https://example.com/file.zip")!
+        let path = NSTemporaryDirectory() + "file.zip"
+        
+        downloadTask = manager.download(url: url, destinationPath: path)
+        downloadTask?.delegate = self
+    }
+    
+    func pauseDownload() {
+        downloadTask?.pause()
+    }
+    
+    func resumeDownload() {
+        downloadTask?.resume()
+    }
+    
+    func cancelDownload() {
+        downloadTask?.cancel()
+    }
+}
+
+extension DownloadViewController: BIDownloadDelegate {
+    func downloadDidStart(_ task: BIDownloadTask) {
+        print("Download started")
+    }
+    
+    func downloadDidProgress(_ task: BIDownloadTask, progress: Double) {
+        let percentage = Int(progress * 100)
+        print("Progress: \(percentage)%")
+    }
+    
+    func downloadDidComplete(_ task: BIDownloadTask, filePath: String) {
+        print("Download completed: \(filePath)")
+    }
+    
+    func downloadDidFail(_ task: BIDownloadTask, error: Error) {
+        print("Download failed: \(error)")
+    }
+}</code></pre>
+
+                <h3>Objective-C</h3>
+                <pre><code>@import BICurlDownloader;
+
+@interface DownloadViewController () &lt;BIDownloadDelegate&gt;
+@property (nonatomic, strong) BIDownloadTask *downloadTask;
+@end
+
+@implementation DownloadViewController
+
+- (void)startDownload {
+    BIDownloadManager *manager = [BIDownloadManager shared];
+    NSURL *url = [NSURL URLWithString:@"https://example.com/file.zip"];
+    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"file.zip"];
+    
+    self.downloadTask = [manager downloadFromURL:url 
+                                 destinationPath:path 
+                                         options:nil];
+    self.downloadTask.delegate = self;
+}
+
+- (void)pauseDownload {
+    [self.downloadTask pause];
+}
+
+- (void)resumeDownload {
+    [self.downloadTask resume];
+}
+
+- (void)cancelDownload {
+    [self.downloadTask cancel];
+}
+
+#pragma mark - BIDownloadDelegate
+
+- (void)downloadDidStart:(BIDownloadTask *)task {
+    NSLog(@"Download started");
+}
+
+- (void)downloadDidProgress:(BIDownloadTask *)task progress:(double)progress {
+    NSInteger percentage = (NSInteger)(progress * 100);
+    NSLog(@"Progress: %ld%%", (long)percentage);
+}
+
+- (void)downloadDidComplete:(BIDownloadTask *)task filePath:(NSString *)filePath {
+    NSLog(@"Download completed: %@", filePath);
+}
+
+- (void)downloadDidFail:(BIDownloadTask *)task error:(NSError *)error {
+    NSLog(@"Download failed: %@", error);
+}
+
+@end</code></pre>
+            </section>
+
+            <section id="with-options">
+                <h2>Download with Custom Options</h2>
+                <p>Configure download behavior with options:</p>
+
+                <h3>Swift</h3>
+                <pre><code>import BICurlDownloader
+
+let manager = BIDownloadManager.shared
+let url = URL(string: "https://example.com/large-file.zip")!
+let path = NSTemporaryDirectory() + "large-file.zip"
+
+// Configure options
+var options = BIDownloadOptions()
+options.maxConcurrentStreams = 8        // Use 8 parallel streams
+options.enableBackgroundAudio = true    // Continue in background
+options.allowsCellularAccess = false    // WiFi only
+options.timeoutInterval = 120           // 2 minutes timeout
+
+let task = manager.download(
+    url: url,
+    destinationPath: path,
+    options: options
+)
+task.delegate = self</code></pre>
+
+                <h3>Objective-C</h3>
+                <pre><code>@import BICurlDownloader;
+
+BIDownloadManager *manager = [BIDownloadManager shared];
+NSURL *url = [NSURL URLWithString:@"https://example.com/large-file.zip"];
+NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"large-file.zip"];
+
+// Configure options
+BIDownloadOptions *options = [[BIDownloadOptions alloc] init];
+options.maxConcurrentStreams = 8;
+options.enableBackgroundAudio = YES;
+options.allowsCellularAccess = NO;
+options.timeoutInterval = 120;
+
+BIDownloadTask *task = [manager downloadFromURL:url
+                                destinationPath:path
+                                        options:options];
+task.delegate = self;</code></pre>
+            </section>
+
+            <section id="multiple-downloads">
+                <h2>Managing Multiple Downloads</h2>
+                <p>Download multiple files with queue management:</p>
+
+                <h3>Swift</h3>
+                <pre><code>import BICurlDownloader
+
+class DownloadManager {
+    let manager = BIDownloadManager.shared
+    var tasks: [BIDownloadTask] = []
+    
+    func startMultipleDownloads() {
+        // Configure manager
+        var config = BIDownloadManagerConfiguration()
+        config.maxConcurrentDownloads = 3  // Max 3 simultaneous downloads
+        manager.configure(config)
+        
+        // Add multiple downloads
+        let urls = [
+            "https://example.com/file1.zip",
+            "https://example.com/file2.zip",
+            "https://example.com/file3.zip",
+            "https://example.com/file4.zip"
+        ]
+        
+        for (index, urlString) in urls.enumerated() {
+            let url = URL(string: urlString)!
+            let path = NSTemporaryDirectory() + "file\(index + 1).zip"
+            
+            let task = manager.download(url: url, destinationPath: path)
+            task.delegate = self
+            tasks.append(task)
+        }
+    }
+    
+    func pauseAll() {
+        manager.pauseAll()
+    }
+    
+    func resumeAll() {
+        manager.resumeAll()
+    }
+    
+    func cancelAll() {
+        manager.cancelAll()
+    }
+}
+
+extension DownloadManager: BIDownloadDelegate {
+    func downloadDidComplete(_ task: BIDownloadTask, filePath: String) {
+        print("Completed: \(filePath)")
+        
+        // Check if all downloads are complete
+        let allComplete = tasks.allSatisfy { $0.state == .completed }
+        if allComplete {
+            print("All downloads completed!")
+        }
+    }
+    
+    func downloadDidFail(_ task: BIDownloadTask, error: Error) {
+        print("Failed: \(error)")
+    }
+    
+    func downloadDidStart(_ task: BIDownloadTask) {}
+    func downloadDidProgress(_ task: BIDownloadTask, progress: Double) {}
+}</code></pre>
+
+                <h3>Objective-C</h3>
+                <pre><code>@import BICurlDownloader;
+
+@interface DownloadManager () &lt;BIDownloadDelegate&gt;
+@property (nonatomic, strong) BIDownloadManager *manager;
+@property (nonatomic, strong) NSMutableArray&lt;BIDownloadTask *&gt; *tasks;
+@end
+
+@implementation DownloadManager
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _manager = [BIDownloadManager shared];
+        _tasks = [NSMutableArray array];
+    }
+    return self;
+}
+
+- (void)startMultipleDownloads {
+    // Configure manager
+    BIDownloadManagerConfiguration *config = [[BIDownloadManagerConfiguration alloc] init];
+    config.maxConcurrentDownloads = 3;
+    [self.manager configure:config];
+    
+    // Add multiple downloads
+    NSArray *urls = @[
+        @"https://example.com/file1.zip",
+        @"https://example.com/file2.zip",
+        @"https://example.com/file3.zip",
+        @"https://example.com/file4.zip"
+    ];
+    
+    for (NSInteger i = 0; i < urls.count; i++) {
+        NSURL *url = [NSURL URLWithString:urls[i]];
+        NSString *filename = [NSString stringWithFormat:@"file%ld.zip", (long)(i + 1)];
+        NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:filename];
+        
+        BIDownloadTask *task = [self.manager downloadFromURL:url
+                                             destinationPath:path
+                                                     options:nil];
+        task.delegate = self;
+        [self.tasks addObject:task];
+    }
+}
+
+- (void)pauseAll {
+    [self.manager pauseAll];
+}
+
+- (void)resumeAll {
+    [self.manager resumeAll];
+}
+
+- (void)cancelAll {
+    [self.manager cancelAll];
+}
+
+#pragma mark - BIDownloadDelegate
+
+- (void)downloadDidComplete:(BIDownloadTask *)task filePath:(NSString *)filePath {
+    NSLog(@"Completed: %@", filePath);
+    
+    // Check if all downloads are complete
+    BOOL allComplete = YES;
+    for (BIDownloadTask *t in self.tasks) {
+        if (t.state != BIDownloadStateCompleted) {
+            allComplete = NO;
+            break;
+        }
+    }
+    
+    if (allComplete) {
+        NSLog(@"All downloads completed!");
+    }
+}
+
+- (void)downloadDidFail:(BIDownloadTask *)task error:(NSError *)error {
+    NSLog(@"Failed: %@", error);
+}
+
+- (void)downloadDidStart:(BIDownloadTask *)task {}
+- (void)downloadDidProgress:(BIDownloadTask *)task progress:(double)progress {}
+
+@end</code></pre>
+            </section>
+
+            <section id="common-patterns">
+                <h2>Common Patterns</h2>
+
+                <h3>1. Download to Documents Directory</h3>
+                <pre><code>// Swift
+let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+let destinationPath = documentsPath.appendingPathComponent("file.zip").path
+
+// Objective-C
+NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+NSString *documentsPath = paths.firstObject;
+NSString *destinationPath = [documentsPath stringByAppendingPathComponent:@"file.zip"];</code></pre>
+
+                <h3>2. Download with Progress Bar</h3>
+                <pre><code>// Swift
+@IBOutlet weak var progressView: UIProgressView!
+
+func downloadDidProgress(_ task: BIDownloadTask, progress: Double) {
+    DispatchQueue.main.async {
+        self.progressView.progress = Float(progress)
+    }
+}
+
+// Objective-C
+@property (weak, nonatomic) IBOutlet UIProgressView *progressView;
+
+- (void)downloadDidProgress:(BIDownloadTask *)task progress:(double)progress {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.progressView.progress = (float)progress;
+    });
+}</code></pre>
+
+                <h3>3. Check Download State</h3>
+                <pre><code>// Swift
+switch task.state {
+case .pending:
+    print("Waiting to start")
+case .downloading:
+    print("Downloading")
+case .paused:
+    print("Paused")
+case .completed:
+    print("Completed")
+case .failed:
+    print("Failed")
+case .cancelled:
+    print("Cancelled")
+}
+
+// Objective-C
+switch (task.state) {
+    case BIDownloadStatePending:
+        NSLog(@"Waiting to start");
+        break;
+    case BIDownloadStateDownloading:
+        NSLog(@"Downloading");
+        break;
+    case BIDownloadStatePaused:
+        NSLog(@"Paused");
+        break;
+    case BIDownloadStateCompleted:
+        NSLog(@"Completed");
+        break;
+    case BIDownloadStateFailed:
+        NSLog(@"Failed");
+        break;
+    case BIDownloadStateCancelled:
+        NSLog(@"Cancelled");
+        break;
+}</code></pre>
+
+                <h3>4. Get Download Statistics</h3>
+                <pre><code>// Swift
+let stats = manager.getDownloadStatistics()
+print("Active: \(stats.activeDownloads)")
+print("Queued: \(stats.queuedDownloads)")
+print("Available slots: \(stats.availableSlots)")
+
+// Objective-C
+BIDownloadStatistics *stats = [manager getDownloadStatistics];
+NSLog(@"Active: %ld", (long)stats.activeDownloads);
+NSLog(@"Queued: %ld", (long)stats.queuedDownloads);
+NSLog(@"Available slots: %ld", (long)stats.availableSlots);</code></pre>
+            </section>
+
+            <section id="tips">
+                <h2>Quick Tips</h2>
+
+                <div class="alert alert-info">
+                    <strong>Tip 1: Always keep a strong reference to your download tasks</strong><br>
+                    Store tasks in a property to prevent them from being deallocated before completion.
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Tip 2: Use the delegate pattern for UI updates</strong><br>
+                    Implement <code>BIDownloadDelegate</code> to receive real-time progress and state updates.
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Tip 3: Enable logging during development</strong><br>
+                    Set <code>config.enableLogging = true</code> and <code>config.logLevel = .debug</code> to see detailed logs.
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Important: Background downloads require capability</strong><br>
+                    Add "Background Modes" capability and enable "Audio" to support background downloads. See <a href="installation.html#background-capability">Installation Guide</a>.
+                </div>
+            </section>
+
+            <section id="next-steps">
+                <h2>Next Steps</h2>
+                
+                <p>Now that you've learned the basics, explore more advanced features:</p>
+                
+                <ul>
+                    <li><a href="core-components.html">Learn about Core Components</a> - Understand the framework architecture</li>
+                    <li><a href="background-download.html">Background Downloads</a> - Keep downloads running in background</li>
+                    <li><a href="multipart-download.html">Multipart Downloads</a> - Speed up large file downloads</li>
+                    <li><a href="authentication.html">Authentication</a> - Download from protected resources</li>
+                    <li><a href="usage-examples.html">More Examples</a> - Browse comprehensive usage examples</li>
+                </ul>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 BICurlDownloader. All rights reserved.</p>
+                <p>Documentation Version 1.0.0 | Framework Version 1.0.0</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

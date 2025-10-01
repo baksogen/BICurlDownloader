@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication - BICurlDownloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>BICurlDownloader</h1>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="overview.html">Overview</a></li>
+                    <li><a href="installation.html">Installation</a></li>
+                    <li><a href="quick-start.html">Quick Start</a></li>
+                    <li><a href="core-components.html">Core Components</a></li>
+                    <li><a href="usage-examples.html">Usage Examples</a></li>
+                    <li><a href="background-download.html">Background Download</a></li>
+                    <li><a href="multipart-download.html">Multipart Download</a></li>
+                    <li><a href="authentication.html" class="active">Authentication</a></li>
+                    <li><a href="error-handling.html">Error Handling</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="api-reference.html">API Reference</a></li>
+                    <li><a href="advanced-examples.html">Advanced Examples</a></li>
+                    <li><a href="best-practices.html">Best Practices</a></li>
+                    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Authentication</h1>
+            <p class="subtitle">Download from protected resources</p>
+
+            <section id="overview">
+                <h2>Overview</h2>
+                <p>BICurlDownloader supports multiple authentication methods for downloading files from protected servers. The framework handles authentication automatically once configured.</p>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>Basic Authentication</h4>
+                        <p>Username and password encoded in Base64</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Digest Authentication</h4>
+                        <p>More secure challenge-response mechanism</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Bearer Token</h4>
+                        <p>OAuth 2.0 and JWT token support</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>Custom Headers</h4>
+                        <p>Any custom authentication header</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="basic-auth">
+                <h2>Basic Authentication</h2>
+                <p>The simplest form of HTTP authentication, using username and password.</p>
+
+                <h3>How It Works</h3>
+                <pre><code>// Client sends credentials in Authorization header:
+Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+
+// Where "dXNlcm5hbWU6cGFzc3dvcmQ=" is Base64("username:password")</code></pre>
+
+                <h3>Swift Implementation</h3>
+                <pre><code>import BICurlDownloader
+
+let auth = BIAuthenticationOptions(
+    basicWithUsername: "myusername",
+    password: "mypassword"
+)
+
+var options = BIDownloadOptions()
+options.authentication = auth
+
+let task = manager.download(
+    url: url,
+    destinationPath: path,
+    options: options
+)
+task.delegate = self</code></pre>
+
+                <h3>Objective-C Implementation</h3>
+                <pre><code>@import BICurlDownloader;
+
+BIAuthenticationOptions *auth = [[BIAuthenticationOptions alloc] 
+    initWithBasicWithUsername:@"myusername" 
+                     password:@"mypassword"];
+
+BIDownloadOptions *options = [[BIDownloadOptions alloc] init];
+options.authentication = auth;
+
+BIDownloadTask *task = [manager downloadFromURL:url
+                                destinationPath:path
+                                        options:options];
+task.delegate = self;</code></pre>
+
+                <div class="alert alert-warning">
+                    <strong>Security Note:</strong> Basic authentication sends credentials in Base64 encoding, which is easily decoded. Always use HTTPS (not HTTP) when using Basic authentication.
+                </div>
+            </section>
+
+            <section id="digest-auth">
+                <h2>Digest Authentication</h2>
+                <p>More secure than Basic authentication, using MD5 hashing and nonce values.</p>
+
+                <h3>How It Works</h3>
+                <ol>
+                    <li>Client makes request without credentials</li>
+                    <li>Server responds with 401 and challenge (nonce)</li>
+                    <li>Client computes hash with username, password, and nonce</li>
+                    <li>Client sends hashed credentials</li>
+                    <li>Server validates and grants access</li>
+                </ol>
+
+                <h3>Swift Implementation</h3>
+                <pre><code>let auth = BIAuthenticationOptions(
+    digestWithUsername: "myusername",
+    password: "mypassword"
+)
+
+var options = BIDownloadOptions()
+options.authentication = auth
+
+let task = manager.download(
+    url: url,
+    destinationPath: path,
+    options: options
+)</code></pre>
+
+                <h3>Objective-C Implementation</h3>
+                <pre><code>BIAuthenticationOptions *auth = [[BIAuthenticationOptions alloc] 
+    initWithDigestWithUsername:@"myusername" 
+                      password:@"mypassword"];
+
+BIDownloadOptions *options = [[BIDownloadOptions alloc] init];
+options.authentication = auth;
+
+BIDownloadTask *task = [manager downloadFromURL:url
+                                destinationPath:path
+                                        options:options];</code></pre>
+
+                <div class="alert alert-info">
+                    <strong>Advantage:</strong> Digest authentication never sends the password in plain text or Base64. The password is hashed before transmission.
+                </div>
+            </section>
+
+            <section id="bearer-token">
+                <h2>Bearer Token Authentication</h2>
+                <p>Used with OAuth 2.0, JWT tokens, and modern API authentication.</p>
+
+                <h3>How It Works</h3>
+                <pre><code>// Client sends token in Authorization header:
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</code></pre>
+
+                <h3>Swift Implementation</h3>
+                <pre><code>let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0..."
+
+let auth = BIAuthenticationOptions(bearerToken: token)
+
+var options = BIDownloadOptions()
+options.authentication = auth
+
+let task = manager.download(
+    url: url,
+    destinationPath: path,
+    options: options
+)</code></pre>
+
+                <h3>Objective-C Implementation</h3>
+                <pre><code>NSString *token = @"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+
+BIAuthenticationOptions *auth = [[BIAuthenticationOptions alloc] 
+    initWithBearerToken:token];
+
+BIDownloadOptions *options = [[BIDownloadOptions alloc] init];
+options.authentication = auth;
+
+BIDownloadTask *task = [manager downloadFromURL:url
+                                destinationPath:path
+                                        options:options];</code></pre>
+
+                <h3>Token Refresh Example</h3>
+                <pre><code>// Swift
+class TokenManager {
+    var currentToken: String?
+    var tokenExpiry: Date?
+    
+    func getValidToken() -> String? {
+        // Check if token is expired
+        if let expiry = tokenExpiry, Date() > expiry {
+            // Token expired, refresh it
+            refreshToken { newToken in
+                self.currentToken = newToken
+                self.tokenExpiry = Date().addingTimeInterval(3600) // 1 hour
+            }
+        }
+        return currentToken
+    }
+    
+    func refreshToken(completion: @escaping (String) -> Void) {
+        // Call your API to refresh token
+        // This is pseudo-code
+        APIClient.refreshToken { result in
+            switch result {
+            case .success(let newToken):
+                completion(newToken)
+            case .failure(let error):
+                print("Token refresh failed: \(error)")
+            }
+        }
+    }
+}
+
+// Usage
+let tokenManager = TokenManager()
+
+func downloadWithFreshToken() {
+    guard let token = tokenManager.getValidToken() else {
+        print("No valid token")
+        return
+    }
+    
+    let auth = BIAuthenticationOptions(bearerToken: token)
+    var options = BIDownloadOptions()
+    options.authentication = auth
+    
+    let task = manager.download(url: url, destinationPath: path, options: options)
+    task.delegate = self
+}</code></pre>
+            </section>
+
+            <section id="custom-header">
+                <h2>Custom Header Authentication</h2>
+                <p>For APIs that use custom authentication headers (API keys, proprietary schemes).</p>
+
+                <h3>Swift Implementation</h3>
+                <pre><code>// API Key authentication
+let auth = BIAuthenticationOptions(
+    customWithHeader: "X-API-Key",
+    value: "your_api_key_here"
+)
+
+var options = BIDownloadOptions()
+options.authentication = auth
+
+let task = manager.download(url: url, destinationPath: path, options: options)</code></pre>
+
+                <h3>Objective-C Implementation</h3>
+                <pre><code>BIAuthenticationOptions *auth = [[BIAuthenticationOptions alloc] 
+    initWithCustomWithHeader:@"X-API-Key" 
+                       value:@"your_api_key_here"];
+
+BIDownloadOptions *options = [[BIDownloadOptions alloc] init];
+options.authentication = auth;
+
+BIDownloadTask *task = [manager downloadFromURL:url
+                                destinationPath:path
+                                        options:options];</code></pre>
+
+                <h3>Common Custom Headers</h3>
+                <table>
+                    <tr>
+                        <th>Header Name</th>
+                        <th>Used By</th>
+                        <th>Example</th>
+                    </tr>
+                    <tr>
+                        <td><code>X-API-Key</code></td>
+                        <td>Many REST APIs</td>
+                        <td><code>abc123def456</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>X-Auth-Token</code></td>
+                        <td>Custom APIs</td>
+                        <td><code>token_abc123</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>X-Access-Token</code></td>
+                        <td>Mobile APIs</td>
+                        <td><code>eyJhbGci...</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>X-Client-ID</code></td>
+                        <td>Client identification</td>
+                        <td><code>client_12345</code></td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="additional-headers">
+                <h2>Additional Custom Headers</h2>
+                <p>Beyond authentication, you can add any custom HTTP headers.</p>
+
+                <h3>Swift Implementation</h3>
+                <pre><code>var options = BIDownloadOptions()
+
+// Add authentication
+options.authentication = BIAuthenticationOptions(
+    bearerToken: "your_token"
+)
+
+// Add additional headers
+options.customHeaders = [
+    "X-Client-Version": "1.0.0",
+    "X-Device-ID": UIDevice.current.identifierForVendor?.uuidString ?? "",
+    "X-Platform": "iOS",
+    "Accept-Language": "en-US",
+    "X-Request-ID": UUID().uuidString
+]
+
+let task = manager.download(url: url, destinationPath: path, options: options)</code></pre>
+
+                <h3>Objective-C Implementation</h3>
+                <pre><code>BIDownloadOptions *options = [[BIDownloadOptions alloc] init];
+
+// Add authentication
+options.authentication = [[BIAuthenticationOptions alloc] 
+    initWithBearerToken:@"your_token"];
+
+// Add additional headers
+options.customHeaders = @{
+    @"X-Client-Version": @"1.0.0",
+    @"X-Device-ID": [[[UIDevice currentDevice] identifierForVendor] UUIDString],
+    @"X-Platform": @"iOS",
+    @"Accept-Language": @"en-US",
+    @"X-Request-ID": [[NSUUID UUID] UUIDString]
+};
+
+BIDownloadTask *task = [manager downloadFromURL:url
+                                destinationPath:path
+                                        options:options];</code></pre>
+            </section>
+
+            <section id="secure-storage">
+                <h2>Secure Credential Storage</h2>
+                <p>Best practices for storing authentication credentials securely.</p>
+
+                <h3>Using Keychain</h3>
+                <pre><code>import Security
+
+class KeychainHelper {
+    
+    static func saveCredentials(username: String, password: String, server: String) {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassInternetPassword,
+            kSecAttrAccount as String: username,
+            kSecAttrServer as String: server,
+            kSecValueData as String: password.data(using: .utf8)!
+        ]
+        
+        SecItemDelete(query as CFDictionary)
+        SecItemAdd(query as CFDictionary, nil)
+    }
+    
+    static func retrieveCredentials(username: String, server: String) -> String? {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassInternetPassword,
+            kSecAttrAccount as String: username,
+            kSecAttrServer as String: server,
+            kSecReturnData as String: true
+        ]
+        
+        var result: AnyObject?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        
+        if status == errSecSuccess,
+           let data = result as? Data,
+           let password = String(data: data, encoding: .utf8) {
+            return password
+        }
+        
+        return nil
+    }
+    
+    static func deleteCredentials(username: String, server: String) {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassInternetPassword,
+            kSecAttrAccount as String: username,
+            kSecAttrServer as String: server
+        ]
+        
+        SecItemDelete(query as CFDictionary)
+    }
+}
+
+// Usage
+KeychainHelper.saveCredentials(
+    username: "user@example.com",
+    password: "secretPassword",
+    server: "api.example.com"
+)
+
+// Retrieve and use
+if let password = KeychainHelper.retrieveCredentials(
+    username: "user@example.com",
+    server: "api.example.com"
+) {
+    let auth = BIAuthenticationOptions(
+        basicWithUsername: "user@example.com",
+        password: password
+    )
+    // Use auth for download
+}</code></pre>
+
+                <div class="alert alert-warning">
+                    <strong>Security Best Practice:</strong> Never hardcode credentials in your app. Always use Keychain for storing sensitive information like passwords and tokens.
+                </div>
+            </section>
+
+            <section id="error-handling">
+                <h2>Authentication Error Handling</h2>
+
+                <h3>Common Authentication Errors</h3>
+                <table>
+                    <tr>
+                        <th>HTTP Status</th>
+                        <th>Meaning</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr>
+                        <td>401 Unauthorized</td>
+                        <td>Invalid or missing credentials</td>
+                        <td>Check credentials, refresh token</td>
+                    </tr>
+                    <tr>
+                        <td>403 Forbidden</td>
+                        <td>Valid credentials but no access</td>
+                        <td>Check permissions</td>
+                    </tr>
+                    <tr>
+                        <td>407 Proxy Auth Required</td>
+                        <td>Proxy authentication needed</td>
+                        <td>Configure proxy credentials</td>
+                    </tr>
+                </table>
+
+                <h3>Swift Implementation</h3>
+                <pre><code>func downloadDidFail(_ task: BIDownloadTask, error: Error) {
+    let nsError = error as NSError
+    
+    if nsError.code == BIDownloadErrorCode.authenticationError.rawValue {
+        print("Authentication failed")
+        
+        // Try to refresh token
+        if let tokenManager = self.tokenManager {
+            tokenManager.refreshToken { [weak self] newToken in
+                guard let self = self else { return }
+                
+                // Retry download with new token
+                let auth = BIAuthenticationOptions(bearerToken: newToken)
+                var options = BIDownloadOptions()
+                options.authentication = auth
+                
+                let newTask = self.manager.download(
+                    url: task.url,
+                    destinationPath: task.destinationPath,
+                    options: options
+                )
+                newTask.delegate = self
+            }
+        } else {
+            // Show login screen
+            showLoginScreen()
+        }
+    } else if nsError.code == BIDownloadErrorCode.serverError.rawValue {
+        // Check if it's 401 or 403
+        if let userInfo = nsError.userInfo as? [String: Any],
+           let serverCode = userInfo["ServerCode"] as? Int {
+            
+            switch serverCode {
+            case 401:
+                print("Unauthorized - invalid credentials")
+                showLoginScreen()
+                
+            case 403:
+                print("Forbidden - insufficient permissions")
+                showAccessDeniedAlert()
+                
+            default:
+                print("Server error: \(serverCode)")
+            }
+        }
+    }
+}</code></pre>
+
+                <h3>Objective-C Implementation</h3>
+                <pre><code>- (void)downloadDidFail:(BIDownloadTask *)task error:(NSError *)error {
+    if (error.code == BIDownloadErrorCodeAuthenticationError) {
+        NSLog(@"Authentication failed");
+        
+        // Show login screen
+        [self showLoginScreen];
+        
+    } else if (error.code == BIDownloadErrorCodeServerError) {
+        // Check HTTP status code
+        NSNumber *serverCode = error.userInfo[@"ServerCode"];
+        
+        if ([serverCode integerValue] == 401) {
+            NSLog(@"Unauthorized - invalid credentials");
+            [self showLoginScreen];
+            
+        } else if ([serverCode integerValue] == 403) {
+            NSLog(@"Forbidden - insufficient permissions");
+            [self showAccessDeniedAlert];
+        }
+    }
+}</code></pre>
+            </section>
+
+            <section id="real-world-examples">
+                <h2>Real-World Examples</h2>
+
+                <h3>Example 1: AWS S3 with Presigned URL</h3>
+                <pre><code>// Swift
+func downloadFromS3(presignedURL: URL) {
+    // S3 presigned URLs include authentication in query parameters
+    // No additional authentication needed
+    
+    let task = manager.download(
+        url: presignedURL,
+        destinationPath: destinationPath
+    )
+    task.delegate = self
+}</code></pre>
+
+                <h3>Example 2: GitHub API with Personal Access Token</h3>
+                <pre><code>// Swift
+func downloadFromGitHub(repoURL: URL, token: String) {
+    let auth = BIAuthenticationOptions(bearerToken: token)
+    
+    var options = BIDownloadOptions()
+    options.authentication = auth
+    options.customHeaders = [
+        "Accept": "application/vnd.github.v3+json",
+        "User-Agent": "MyApp/1.0"
+    ]
+    
+    let task = manager.download(
+        url: repoURL,
+        destinationPath: destinationPath,
+        options: options
+    )
+    task.delegate = self
+}</code></pre>
+
+                <h3>Example 3: Custom API with Multiple Headers</h3>
+                <pre><code>// Swift
+func downloadFromCustomAPI(fileURL: URL, apiKey: String, sessionToken: String) {
+    let auth = BIAuthenticationOptions(
+        customWithHeader: "X-API-Key",
+        value: apiKey
+    )
+    
+    var options = BIDownloadOptions()
+    options.authentication = auth
+    options.customHeaders = [
+        "X-Session-Token": sessionToken,
+        "X-Client-ID": "ios-app",
+        "X-App-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+    ]
+    
+    let task = manager.download(
+        url: fileURL,
+        destinationPath: destinationPath,
+        options: options
+    )
+    task.delegate = self
+}</code></pre>
+
+                <h3>Example 4: OAuth 2.0 Flow</h3>
+                <pre><code>// Swift
+class OAuth2Manager {
+    var accessToken: String?
+    var refreshToken: String?
+    var tokenExpiry: Date?
+    
+    func downloadWithOAuth(fileURL: URL, completion: @escaping (Result<String, Error>) -> Void) {
+        ensureValidToken { [weak self] token in
+            guard let self = self, let token = token else {
+                completion(.failure(NSError(domain: "OAuth", code: 401, userInfo: nil)))
+                return
+            }
+            
+            let auth = BIAuthenticationOptions(bearerToken: token)
+            var options = BIDownloadOptions()
+            options.authentication = auth
+            
+            let task = BIDownloadManager.shared.download(
+                url: fileURL,
+                destinationPath: "/path/to/destination",
+                options: options
+            )
+            
+            // Store completion for later
+            self.pendingCompletion = completion
+            task.delegate = self
+        }
+    }
+    
+    func ensureValidToken(completion: @escaping (String?) -> Void) {
+        // Check if token is valid
+        if let token = accessToken,
+           let expiry = tokenExpiry,
+           Date() < expiry {
+            completion(token)
+            return
+        }
+        
+        // Token expired, refresh it
+        refreshAccessToken { newToken in
+            completion(newToken)
+        }
+    }
+    
+    func refreshAccessToken(completion: @escaping (String?) -> Void) {
+        guard let refreshToken = refreshToken else {
+            // No refresh token, need to re-authenticate
+            completion(nil)
+            return
+        }
+        
+        // Call OAuth server to refresh token
+        // This is pseudo-code
+        OAuthClient.refreshToken(refreshToken) { result in
+            switch result {
+            case .success(let response):
+                self.accessToken = response.accessToken
+                self.refreshToken = response.refreshToken
+                self.tokenExpiry = Date().addingTimeInterval(TimeInterval(response.expiresIn))
+                completion(response.accessToken)
+                
+            case .failure:
+                completion(nil)
+            }
+        }
+    }
+}</code></pre>
+            </section>
+
+            <section id="testing">
+                <h2>Testing Authentication</h2>
+
+                <h3>Test Endpoints</h3>
+                <pre><code>// Test Basic Auth
+curl -u username:password https://httpbin.org/basic-auth/username/password
+
+// Test Bearer Token
+curl -H "Authorization: Bearer token123" https://httpbin.org/bearer
+
+// Test Custom Header
+curl -H "X-API-Key: key123" https://your-api.com/file</code></pre>
+
+                <h3>Debug Authentication Issues</h3>
+                <pre><code>// Enable verbose logging
+var config = BIDownloadManagerConfiguration()
+config.enableLogging = true
+config.logLevel = .verbose
+manager.configure(config)
+
+// Check logs for authentication headers being sent
+// Look for: "Authorization: Basic..." or "Authorization: Bearer..."</code></pre>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 BICurlDownloader. All rights reserved.</p>
+                <p>Documentation Version 1.0.0 | Framework Version 1.0.0</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

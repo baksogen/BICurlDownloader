@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multipart Download - BICurlDownloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>BICurlDownloader</h1>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="overview.html">Overview</a></li>
+                    <li><a href="installation.html">Installation</a></li>
+                    <li><a href="quick-start.html">Quick Start</a></li>
+                    <li><a href="core-components.html">Core Components</a></li>
+                    <li><a href="usage-examples.html">Usage Examples</a></li>
+                    <li><a href="background-download.html">Background Download</a></li>
+                    <li><a href="multipart-download.html" class="active">Multipart Download</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="error-handling.html">Error Handling</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="api-reference.html">API Reference</a></li>
+                    <li><a href="advanced-examples.html">Advanced Examples</a></li>
+                    <li><a href="best-practices.html">Best Practices</a></li>
+                    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Multipart Download</h1>
+            <p class="subtitle">Accelerate downloads with parallel streams</p>
+
+            <section id="overview">
+                <h2>Overview</h2>
+                <p>Multipart downloading splits a file into multiple chunks and downloads them simultaneously using parallel streams. This can significantly increase download speeds, especially on high-bandwidth connections.</p>
+
+                <div class="alert alert-info">
+                    <strong>Speed Improvement:</strong><br>
+                    Multipart downloads can be 2-5x faster than single-threaded downloads on high-speed connections, depending on server performance and network conditions.
+                </div>
+
+                <h3>How It Works</h3>
+                <ol>
+                    <li>Framework checks if server supports Range requests</li>
+                    <li>File is divided into optimal number of chunks</li>
+                    <li>Each chunk is downloaded in parallel</li>
+                    <li>Progress is aggregated from all chunks</li>
+                    <li>Chunks are assembled into final file</li>
+                </ol>
+            </section>
+
+            <section id="requirements">
+                <h2>Server Requirements</h2>
+                <p>For multipart downloads to work, the server must support HTTP Range requests.</p>
+
+                <h3>Required Headers</h3>
+                <table>
+                    <tr>
+                        <th>Header</th>
+                        <th>Value</th>
+                        <th>Purpose</th>
+                    </tr>
+                    <tr>
+                        <td><code>Accept-Ranges</code></td>
+                        <td><code>bytes</code></td>
+                        <td>Indicates Range request support</td>
+                    </tr>
+                    <tr>
+                        <td><code>Content-Length</code></td>
+                        <td>File size in bytes</td>
+                        <td>Required for chunk calculation</td>
+                    </tr>
+                    <tr>
+                        <td><code>Content-Range</code></td>
+                        <td><code>bytes 0-1023/2048</code></td>
+                        <td>Returned with partial content</td>
+                    </tr>
+                </table>
+
+                <h3>Server Response Example</h3>
+                <pre><code>// HEAD request to check capabilities
+HEAD /file.zip HTTP/1.1
+Host: example.com
+
+// Server response
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Content-Length: 104857600
+Content-Type: application/zip
+
+// Range request
+GET /file.zip HTTP/1.1
+Host: example.com
+Range: bytes=0-26214399
+
+// Server response
+HTTP/1.1 206 Partial Content
+Content-Range: bytes 0-26214399/104857600
+Content-Length: 26214400</code></pre>
+
+                <h3>Automatic Detection</h3>
+                <p>BICurlDownloader automatically detects server capabilities:</p>
+                <pre><code>// Framework performs HEAD request automatically
+// If server supports Range requests → multipart download
+// If server doesn't support Range → single-threaded download</code></pre>
+            </section>
+
+            <section id="configuration">
+                <h2>Configuration</h2>
+
+                <h3>Enable/Disable Multipart</h3>
+
+                <h4>Swift</h4>
+                <pre><code>var options = BIDownloadOptions()
+
+// Enable multipart (default)
+options.enableMultipart = true
+
+// Disable multipart (force single-threaded)
+options.enableMultipart = false
+
+let task = manager.download(url: url, destinationPath: path, options: options)</code></pre>
+
+                <h4>Objective-C</h4>
+                <pre><code>BIDownloadOptions *options = [[BIDownloadOptions alloc] init];
+
+// Enable multipart (default)
+options.enableMultipart = YES;
+
+// Disable multipart (force single-threaded)
+options.enableMultipart = NO;
+
+BIDownloadTask *task = [manager downloadFromURL:url 
+                                destinationPath:path 
+                                        options:options];</code></pre>
+
+                <h3>Configure Stream Count</h3>
+
+                <h4>Swift</h4>
+                <pre><code>var options = BIDownloadOptions()
+options.maxConcurrentStreams = 8  // 2-16 streams (default: 4)
+
+// Recommended settings by connection type:
+// WiFi: 4-8 streams
+// Cellular 4G/5G: 2-4 streams
+// Cellular 3G: 1-2 streams
+
+let task = manager.download(url: url, destinationPath: path, options: options)</code></pre>
+
+                <h4>Objective-C</h4>
+                <pre><code>BIDownloadOptions *options = [[BIDownloadOptions alloc] init];
+options.maxConcurrentStreams = 8;  // 2-16 streams (default: 4)
+
+BIDownloadTask *task = [manager downloadFromURL:url 
+                                destinationPath:path 
+                                        options:options];</code></pre>
+            </section>
+
+            <section id="activation-conditions">
+                <h2>Activation Conditions</h2>
+                <p>Multipart download is automatically activated when ALL conditions are met:</p>
+
+                <table>
+                    <tr>
+                        <th>Condition</th>
+                        <th>Requirement</th>
+                        <th>Check Method</th>
+                    </tr>
+                    <tr>
+                        <td>Option Enabled</td>
+                        <td><code>enableMultipart = true</code></td>
+                        <td>User configuration</td>
+                    </tr>
+                    <tr>
+                        <td>Range Support</td>
+                        <td>Server sends <code>Accept-Ranges: bytes</code></td>
+                        <td>HEAD request</td>
+                    </tr>
+                    <tr>
+                        <td>Content Length</td>
+                        <td>Server provides file size</td>
+                        <td>Content-Length header</td>
+                    </tr>
+                    <tr>
+                        <td>File Size</td>
+                        <td>≥ 5 MB (5,242,880 bytes)</td>
+                        <td>Threshold check</td>
+                    </tr>
+                </table>
+
+                <div class="alert alert-warning">
+                    <strong>Important:</strong> If any condition fails, the framework automatically falls back to single-threaded download without errors.
+                </div>
+            </section>
+
+            <section id="chunk-calculation">
+                <h2>Chunk Calculation</h2>
+
+                <h3>Algorithm</h3>
+                <p>The framework uses an adaptive algorithm to determine optimal chunk size:</p>
+
+                <pre><code>// Simplified chunk calculation
+let fileSize: Int64 = 104857600  // 100 MB
+let maxStreams = 4
+let minChunkSize: Int64 = 1048576  // 1 MB
+
+// Calculate chunk size
+let chunkSize = max(fileSize / Int64(maxStreams), minChunkSize)
+let actualChunks = Int(ceil(Double(fileSize) / Double(chunkSize)))
+
+// Example for 100 MB file with 4 streams:
+// chunkSize = 26,214,400 bytes (25 MB)
+// actualChunks = 4</code></pre>
+
+                <h3>Example Calculations</h3>
+                <table>
+                    <tr>
+                        <th>File Size</th>
+                        <th>Streams</th>
+                        <th>Chunk Size</th>
+                        <th>Actual Chunks</th>
+                    </tr>
+                    <tr>
+                        <td>10 MB</td>
+                        <td>4</td>
+                        <td>2.5 MB</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>50 MB</td>
+                        <td>4</td>
+                        <td>12.5 MB</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>100 MB</td>
+                        <td>4</td>
+                        <td>25 MB</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>500 MB</td>
+                        <td>8</td>
+                        <td>62.5 MB</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td>1 GB</td>
+                        <td>8</td>
+                        <td>128 MB</td>
+                        <td>8</td>
+                    </tr>
+                </table>
+
+                <h3>Byte Range Examples</h3>
+                <pre><code>// For 100 MB file split into 4 chunks:
+
+Chunk 0: Range: bytes=0-26214399 (25 MB)
+Chunk 1: Range: bytes=26214400-52428799 (25 MB)
+Chunk 2: Range: bytes=52428800-78643199 (25 MB)
+Chunk 3: Range: bytes=78643200-104857599 (25 MB + remainder)</code></pre>
+            </section>
+
+            <section id="progress-tracking">
+                <h2>Progress Tracking</h2>
+                <p>Progress is aggregated from all parallel streams:</p>
+
+                <h3>How It Works</h3>
+                <pre><code>// Each chunk reports its progress
+Chunk 0: 10 MB / 25 MB = 40%
+Chunk 1: 15 MB / 25 MB = 60%
+Chunk 2: 8 MB / 25 MB = 32%
+Chunk 3: 12 MB / 25 MB = 48%
+
+// Total progress calculation
+Total downloaded: 10 + 15 + 8 + 12 = 45 MB
+Total size: 100 MB
+Overall progress: 45 / 100 = 45%</code></pre>
+
+                <h3>Implementation Example</h3>
+                <pre><code>// Swift
+func downloadDidProgress(_ task: BIDownloadTask, progress: Double) {
+    let percentage = Int(progress * 100)
+    let bytesDownloaded = task.progress.completedUnitCount
+    let totalBytes = task.progress.totalUnitCount
+    
+    print("Progress: \(percentage)%")
+    print("Downloaded: \(bytesDownloaded) / \(totalBytes) bytes")
+}
+
+// Objective-C
+- (void)downloadDidProgress:(BIDownloadTask *)task progress:(double)progress {
+    NSInteger percentage = (NSInteger)(progress * 100);
+    int64_t bytesDownloaded = task.progress.completedUnitCount;
+    int64_t totalBytes = task.progress.totalUnitCount;
+    
+    NSLog(@"Progress: %ld%%", (long)percentage);
+    NSLog(@"Downloaded: %lld / %lld bytes", bytesDownloaded, totalBytes);
+}</code></pre>
+            </section>
+
+            <section id="assembly">
+                <h2>File Assembly</h2>
+                <p>Once all chunks complete, the framework assembles them into the final file.</p>
+
+                <h3>Assembly Process</h3>
+                <ol>
+                    <li>Wait for all chunks to complete downloading</li>
+                    <li>Verify all chunk files exist</li>
+                    <li>Create output file handle</li>
+                    <li>Sequentially append each chunk in order</li>
+                    <li>Verify final file size matches expected size</li>
+                    <li>Delete temporary chunk files</li>
+                    <li>Notify completion</li>
+                </ol>
+
+                <h3>Temporary Files</h3>
+                <pre><code>// Temporary chunk files during download
+/tmp/download_abc123.part0  // Chunk 0
+/tmp/download_abc123.part1  // Chunk 1
+/tmp/download_abc123.part2  // Chunk 2
+/tmp/download_abc123.part3  // Chunk 3
+
+// Final assembled file
+/path/to/destination/file.zip
+
+// Chunks are automatically deleted after assembly</code></pre>
+            </section>
+
+            <section id="performance">
+                <h2>Performance Optimization</h2>
+
+                <h3>Optimal Settings by Connection</h3>
+                <table>
+                    <tr>
+                        <th>Connection Type</th>
+                        <th>Recommended Streams</th>
+                        <th>Reason</th>
+                    </tr>
+                    <tr>
+                        <td>WiFi (High Speed)</td>
+                        <td>6-8</td>
+                        <td>Maximize bandwidth utilization</td>
+                    </tr>
+                    <tr>
+                        <td>WiFi (Normal)</td>
+                        <td>4-6</td>
+                        <td>Balance speed and overhead</td>
+                    </tr>
+                    <tr>
+                        <td>5G Cellular</td>
+                        <td>4-6</td>
+                        <td>Good bandwidth, moderate latency</td>
+                    </tr>
+                    <tr>
+                        <td>4G Cellular</td>
+                        <td>2-4</td>
+                        <td>Limited bandwidth</td>
+                    </tr>
+                    <tr>
+                        <td>3G Cellular</td>
+                        <td>1-2</td>
+                        <td>Low bandwidth, high latency</td>
+                    </tr>
+                </table>
+
+                <h3>Adaptive Configuration Example</h3>
+                <pre><code>import Network
+
+func getOptimalStreamCount(for path: NWPath) -> Int {
+    if path.usesInterfaceType(.wifi) {
+        return 8  // High-speed WiFi
+    } else if path.usesInterfaceType(.cellular) {
+        if path.isExpensive {
+            return 2  // Cellular data, be conservative
+        } else {
+            return 4  // Unlimited cellular
+        }
+    } else {
+        return 4  // Default
+    }
+}
+
+// Usage
+let pathMonitor = NWPathMonitor()
+pathMonitor.pathUpdateHandler = { path in
+    let streamCount = getOptimalStreamCount(for: path)
+    
+    var options = BIDownloadOptions()
+    options.maxConcurrentStreams = streamCount
+    
+    // Start download with optimized settings
+}</code></pre>
+
+                <h3>Performance Tips</h3>
+                <ul>
+                    <li><strong>File Size</strong> - Multipart is most effective for files > 50 MB</li>
+                    <li><strong>Server Performance</strong> - Fast servers benefit more from multipart</li>
+                    <li><strong>Network Quality</strong> - High latency reduces multipart effectiveness</li>
+                    <li><strong>Stream Count</strong> - More streams ≠ always faster (overhead increases)</li>
+                    <li><strong>Memory</strong> - Each stream uses buffer memory</li>
+                </ul>
+            </section>
+
+            <section id="error-handling">
+                <h2>Error Handling</h2>
+
+                <h3>Chunk Failures</h3>
+                <p>If any chunk fails during download:</p>
+                <ol>
+                    <li>Failed chunk is automatically retried</li>
+                    <li>Other chunks continue downloading</li>
+                    <li>After max retries, entire download fails</li>
+                    <li>All temporary files are cleaned up</li>
+                </ol>
+
+                <h3>Recovery Example</h3>
+                <pre><code>// Framework handles chunk failures internally
+// Your delegate receives failure only after all retries exhausted
+
+func downloadDidFail(_ task: BIDownloadTask, error: Error) {
+    if let nsError = error as NSError? {
+        switch nsError.code {
+        case BIDownloadErrorCode.networkError.rawValue:
+            // Network issue - might retry entire download
+            retryDownload(task)
+            
+        case BIDownloadErrorCode.rangeNotSupported.rawValue:
+            // Server doesn't support Range - will use single-threaded
+            print("Server doesn't support multipart")
+            
+        default:
+            print("Download failed: \(error)")
+        }
+    }
+}</code></pre>
+            </section>
+
+            <section id="limitations">
+                <h2>Limitations</h2>
+
+                <h3>Server Limitations</h3>
+                <ul>
+                    <li><strong>No Range Support</strong> - Falls back to single-threaded</li>
+                    <li><strong>Connection Limits</strong> - Some servers limit concurrent connections per IP</li>
+                    <li><strong>Rate Limiting</strong> - Server may throttle multiple connections</li>
+                    <li><strong>Dynamic Content</strong> - Range requests may not work with CDNs</li>
+                </ul>
+
+                <h3>Framework Limitations</h3>
+                <ul>
+                    <li><strong>Min File Size</strong> - 5 MB minimum for multipart activation</li>
+                    <li><strong>Max Streams</strong> - Limited to 16 concurrent streams</li>
+                    <li><strong>Memory Usage</strong> - Each stream uses buffer memory (~64 KB per stream)</li>
+                    <li><strong>Disk I/O</strong> - Multiple temporary files created</li>
+                </ul>
+
+                <div class="alert alert-warning">
+                    <strong>CDN Considerations:</strong> Some CDNs serve different content for Range requests. Always test multipart downloads with your specific server/CDN configuration.
+                </div>
+            </section>
+
+            <section id="testing">
+                <h2>Testing Multipart Downloads</h2>
+
+                <h3>Enable Verbose Logging</h3>
+                <pre><code>var config = BIDownloadManagerConfiguration()
+config.enableLogging = true
+config.logLevel = .verbose  // See detailed multipart logs
+manager.configure(config)
+
+// Console output will show:
+// ✅ Range requests supported
+// ✅ File size: 104857600 bytes
+// ✅ Download mode: adaptive multipart
+// ✅ Using 4 parallel streams
+// Chunk 0: 0-26214399 (25 MB)
+// Chunk 1: 26214400-52428799 (25 MB)
+// ...</code></pre>
+
+                <h3>Test Servers</h3>
+                <p>Use these test URLs to verify multipart functionality:</p>
+                <pre><code>// Test file (supports Range requests)
+https://proof.ovh.net/files/100Mb.dat
+
+// Another test file
+https://ash-speed.hetzner.com/100MB.bin
+
+// Check if your server supports Range:
+curl -I https://your-server.com/file.zip
+// Look for: Accept-Ranges: bytes</code></pre>
+
+                <h3>Verify Multipart Is Active</h3>
+                <pre><code>func downloadDidStart(_ task: BIDownloadTask) {
+    // Check logs for:
+    // "Download mode: adaptive multipart" = multipart active
+    // "Download mode: single thread" = fallback to single-threaded
+}</code></pre>
+            </section>
+
+            <section id="comparison">
+                <h2>Multipart vs Single-Threaded</h2>
+
+                <h3>Performance Comparison</h3>
+                <table>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Multipart</th>
+                        <th>Single-Threaded</th>
+                    </tr>
+                    <tr>
+                        <td>Download Speed</td>
+                        <td>2-5x faster (high bandwidth)</td>
+                        <td>Baseline</td>
+                    </tr>
+                    <tr>
+                        <td>Server Load</td>
+                        <td>Higher (multiple connections)</td>
+                        <td>Lower</td>
+                    </tr>
+                    <tr>
+                        <td>Memory Usage</td>
+                        <td>Higher (multiple buffers)</td>
+                        <td>Lower</td>
+                    </tr>
+                    <tr>
+                        <td>Disk I/O</td>
+                        <td>Multiple temp files</td>
+                        <td>Single file write</td>
+                    </tr>
+                    <tr>
+                        <td>Complexity</td>
+                        <td>Higher</td>
+                        <td>Lower</td>
+                    </tr>
+                    <tr>
+                        <td>Server Requirements</td>
+                        <td>Range request support</td>
+                        <td>Basic HTTP</td>
+                    </tr>
+                </table>
+
+                <h3>When to Use Each</h3>
+                <table>
+                    <tr>
+                        <th>Use Multipart</th>
+                        <th>Use Single-Threaded</th>
+                    </tr>
+                    <tr>
+                        <td>Large files (>50 MB)</td>
+                        <td>Small files (<5 MB)</td>
+                    </tr>
+                    <tr>
+                        <td>High-speed connections</td>
+                        <td>Slow connections</td>
+                    </tr>
+                    <tr>
+                        <td>Static file servers</td>
+                        <td>Dynamic content</td>
+                    </tr>
+                    <tr>
+                        <td>CDN with Range support</td>
+                        <td>Servers without Range support</td>
+                    </tr>
+                    <tr>
+                        <td>WiFi connections</td>
+                        <td>Metered cellular data</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="example">
+                <h2>Complete Example</h2>
+
+                <h3>Swift</h3>
+                <pre><code>import BICurlDownloader
+import Network
+
+class MultipartDownloadManager {
+    let manager = BIDownloadManager.shared
+    let pathMonitor = NWPathMonitor()
+    var currentPath: NWPath?
+    
+    init() {
+        setupNetworkMonitoring()
+    }
+    
+    func setupNetworkMonitoring() {
+        pathMonitor.pathUpdateHandler = { [weak self] path in
+            self?.currentPath = path
+        }
+        pathMonitor.start(queue: DispatchQueue.global())
+    }
+    
+    func downloadWithOptimalSettings(url: URL, destination: String) {
+        // Determine optimal stream count based on connection
+        let streamCount = getOptimalStreamCount()
+        
+        // Configure options
+        var options = BIDownloadOptions()
+        options.enableMultipart = true
+        options.maxConcurrentStreams = streamCount
+        options.enableBackgroundAudio = true
+        
+        print("Starting download with \(streamCount) streams")
+        
+        let task = manager.download(
+            url: url,
+            destinationPath: destination,
+            options: options
+        )
+        task.delegate = self
+    }
+    
+    func getOptimalStreamCount() -> Int {
+        guard let path = currentPath else { return 4 }
+        
+        if path.usesInterfaceType(.wifi) {
+            // High-speed WiFi
+            return 8
+        } else if path.usesInterfaceType(.cellular) {
+            // Cellular - be conservative
+            return path.isExpensive ? 2 : 4
+        } else {
+            return 4
+        }
+    }
+}
+
+extension MultipartDownloadManager: BIDownloadDelegate {
+    func downloadDidStart(_ task: BIDownloadTask) {
+        print("Download started")
+        // Check logs to see if multipart is active
+    }
+    
+    func downloadDidProgress(_ task: BIDownloadTask, progress: Double) {
+        let percentage = Int(progress * 100)
+        let downloaded = task.progress.completedUnitCount
+        let total = task.progress.totalUnitCount
+        
+        print("Progress: \(percentage)% (\(downloaded) / \(total) bytes)")
+    }
+    
+    func downloadDidComplete(_ task: BIDownloadTask, filePath: String) {
+        print("Download completed: \(filePath)")
+        
+        // Verify file size
+        if let attrs = try? FileManager.default.attributesOfItem(atPath: filePath),
+           let fileSize = attrs[.size] as? Int64 {
+            print("Final file size: \(fileSize) bytes")
+        }
+    }
+    
+    func downloadDidFail(_ task: BIDownloadTask, error: Error) {
+        print("Download failed: \(error)")
+    }
+}</code></pre>
+
+                <h3>Objective-C</h3>
+                <pre><code>@interface MultipartDownloadManager () &lt;BIDownloadDelegate&gt;
+@property (nonatomic, strong) BIDownloadManager *manager;
+@end
+
+@implementation MultipartDownloadManager
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _manager = [BIDownloadManager shared];
+    }
+    return self;
+}
+
+- (void)downloadWithOptimalSettingsFromURL:(NSURL *)url destination:(NSString *)destination {
+    // Configure options
+    BIDownloadOptions *options = [[BIDownloadOptions alloc] init];
+    options.enableMultipart = YES;
+    options.maxConcurrentStreams = 8;  // High-speed connection
+    options.enableBackgroundAudio = YES;
+    
+    NSLog(@"Starting download with %ld streams", (long)options.maxConcurrentStreams);
+    
+    BIDownloadTask *task = [self.manager downloadFromURL:url
+                                         destinationPath:destination
+                                                 options:options];
+    task.delegate = self;
+}
+
+#pragma mark - BIDownloadDelegate
+
+- (void)downloadDidStart:(BIDownloadTask *)task {
+    NSLog(@"Download started");
+}
+
+- (void)downloadDidProgress:(BIDownloadTask *)task progress:(double)progress {
+    NSInteger percentage = (NSInteger)(progress * 100);
+    int64_t downloaded = task.progress.completedUnitCount;
+    int64_t total = task.progress.totalUnitCount;
+    
+    NSLog(@"Progress: %ld%% (%lld / %lld bytes)", (long)percentage, downloaded, total);
+}
+
+- (void)downloadDidComplete:(BIDownloadTask *)task filePath:(NSString *)filePath {
+    NSLog(@"Download completed: %@", filePath);
+    
+    // Verify file size
+    NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+    NSNumber *fileSize = attrs[NSFileSize];
+    NSLog(@"Final file size: %@ bytes", fileSize);
+}
+
+- (void)downloadDidFail:(BIDownloadTask *)task error:(NSError *)error {
+    NSLog(@"Download failed: %@", error.localizedDescription);
+}
+
+@end</code></pre>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 BICurlDownloader. All rights reserved.</p>
+                <p>Documentation Version 1.0.0 | Framework Version 1.0.0</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

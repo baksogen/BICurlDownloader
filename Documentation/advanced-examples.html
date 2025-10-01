@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Examples - BICurlDownloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>BICurlDownloader</h1>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="overview.html">Overview</a></li>
+                    <li><a href="installation.html">Installation</a></li>
+                    <li><a href="quick-start.html">Quick Start</a></li>
+                    <li><a href="core-components.html">Core Components</a></li>
+                    <li><a href="usage-examples.html">Usage Examples</a></li>
+                    <li><a href="background-download.html">Background Download</a></li>
+                    <li><a href="multipart-download.html">Multipart Download</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="error-handling.html">Error Handling</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="api-reference.html">API Reference</a></li>
+                    <li><a href="advanced-examples.html" class="active">Advanced Examples</a></li>
+                    <li><a href="best-practices.html">Best Practices</a></li>
+                    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1>Advanced Examples</h1>
+            <p class="subtitle">Complex integration patterns and advanced techniques</p>
+
+            <section id="swiftui">
+                <h2>SwiftUI Integration</h2>
+                <pre><code>import SwiftUI
+import BICurlDownloader
+
+class DownloadViewModel: ObservableObject {
+    @Published var downloads: [DownloadItem] = []
+    @Published var totalProgress: Double = 0
+    
+    private let manager = BIDownloadManager.shared
+    
+    func startDownload(url: URL, filename: String) {
+        let destinationPath = NSTemporaryDirectory() + filename
+        let task = manager.download(url: url, destinationPath: destinationPath, note: filename)
+        task.delegate = self
+        
+        let item = DownloadItem(task: task)
+        downloads.append(item)
+    }
+}
+
+extension DownloadViewModel: BIDownloadDelegate {
+    func downloadDidProgress(_ task: BIDownloadTask, progress: Double) {
+        DispatchQueue.main.async {
+            if let index = self.downloads.firstIndex(where: { $0.task.id == task.id }) {
+                self.downloads[index].progress = progress
+            }
+        }
+    }
+}</code></pre>
+            </section>
+
+            <section id="network-monitoring">
+                <h2>Network-Aware Download Manager</h2>
+                <pre><code>import Network
+
+class SmartDownloadManager {
+    private let pathMonitor = NWPathMonitor()
+    private var currentPath: NWPath?
+    
+    func startDownload(url: URL) {
+        let streamCount = getOptimalStreams()
+        var options = BIDownloadOptions()
+        options.maxConcurrentStreams = streamCount
+        
+        let task = BIDownloadManager.shared.download(url: url, destinationPath: path, options: options)
+    }
+    
+    private func getOptimalStreams() -> Int {
+        guard let path = currentPath else { return 4 }
+        return path.usesInterfaceType(.wifi) ? 8 : 2
+    }
+}</code></pre>
+            </section>
+
+            <section id="download-queue">
+                <h2>Priority Download Queue</h2>
+                <pre><code>class PriorityDownloadQueue {
+    enum Priority: Int {
+        case high = 0, normal = 1, low = 2
+    }
+    
+    private var queues: [Priority: [BIDownloadTask]] = [:]
+    
+    func addDownload(url: URL, priority: Priority) {
+        let task = BIDownloadManager.shared.download(url: url, destinationPath: path)
+        queues[priority, default: []].append(task)
+    }
+}</code></pre>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 BICurlDownloader. All rights reserved.</p>
+                <p>Documentation Version 1.0.0 | Framework Version 1.0.0</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

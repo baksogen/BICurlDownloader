@@ -1,0 +1,6 @@
+framework module BICurlDownloader {
+    umbrella header "BICurlDownloader.h"
+    
+    export *
+    module * { export * }
+}
