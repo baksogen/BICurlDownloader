@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Handling - BICurlDownloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>BICurlDownloader</h1>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="overview.html">Overview</a></li>
+                    <li><a href="installation.html">Installation</a></li>
+                    <li><a href="quick-start.html">Quick Start</a></li>
+                    <li><a href="core-components.html">Core Components</a></li>
+                    <li><a href="usage-examples.html">Usage Examples</a></li>
+                    <li><a href="background-download.html">Background Download</a></li>
+                    <li><a href="multipart-download.html">Multipart Download</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="error-handling.html" class="active">Error Handling</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="api-reference.html">API Reference</a></li>
+                    <li><a href="advanced-examples.html">Advanced Examples</a></li>
+                    <li><a href="best-practices.html">Best Practices</a></li>
+                    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Error Handling</h1>
+            <p class="subtitle">Robust error handling and recovery strategies</p>
+
+            <section id="error-types">
+                <h2>Error Types</h2>
+                <p>BICurlDownloader provides comprehensive error reporting through the <code>BIDownloadError</code> class.</p>
+
+                <h3>Error Codes</h3>
+                <table>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Recovery</th>
+                    </tr>
+                    <tr>
+                        <td>1001</td>
+                        <td><code>invalidURL</code></td>
+                        <td>Invalid or malformed URL</td>
+                        <td>Fix URL format</td>
+                    </tr>
+                    <tr>
+                        <td>1002</td>
+                        <td><code>networkError</code></td>
+                        <td>Network connection issue</td>
+                        <td>Retry after delay</td>
+                    </tr>
+                    <tr>
+                        <td>1003</td>
+                        <td><code>fileSystemError</code></td>
+                        <td>File system operation failed</td>
+                        <td>Check permissions, disk space</td>
+                    </tr>
+                    <tr>
+                        <td>1004</td>
+                        <td><code>curlError</code></td>
+                        <td>cURL library error</td>
+                        <td>Check logs, retry</td>
+                    </tr>
+                    <tr>
+                        <td>1005</td>
+                        <td><code>audioSessionError</code></td>
+                        <td>Audio session configuration failed</td>
+                        <td>Check background capability</td>
+                    </tr>
+                    <tr>
+                        <td>1006</td>
+                        <td><code>validationError</code></td>
+                        <td>Invalid parameters or state</td>
+                        <td>Fix input parameters</td>
+                    </tr>
+                    <tr>
+                        <td>1007</td>
+                        <td><code>authenticationError</code></td>
+                        <td>Authentication failed</td>
+                        <td>Check credentials, refresh token</td>
+                    </tr>
+                    <tr>
+                        <td>1008</td>
+                        <td><code>serverError</code></td>
+                        <td>Server returned error status</td>
+                        <td>Check server status, retry</td>
+                    </tr>
+                    <tr>
+                        <td>1009</td>
+                        <td><code>rangeNotSupported</code></td>
+                        <td>Server doesn't support Range requests</td>
+                        <td>Disable multipart</td>
+                    </tr>
+                    <tr>
+                        <td>1010</td>
+                        <td><code>insufficientSpace</code></td>
+                        <td>Not enough disk space</td>
+                        <td>Free up space</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="basic-handling">
+                <h2>Basic Error Handling</h2>
+
+                <h3>Swift Implementation</h3>
+                <pre><code>extension ViewController: BIDownloadDelegate {
+    func downloadDidFail(_ task: BIDownloadTask, error: Error) {
+        let nsError = error as NSError
+        
+        switch nsError.code {
+        case BIDownloadErrorCode.invalidURL.rawValue:
+            showAlert(title: "Invalid URL", message: "Please check the download URL")
+            
+        case BIDownloadErrorCode.networkError.rawValue:
+            showAlert(title: "Network Error", message: "Check your internet connection")
+            retryDownloadAfterDelay(task)
+            
+        case BIDownloadErrorCode.fileSystemError.rawValue:
+            showAlert(title: "Storage Error", message: "Unable to save file")
+            checkDiskSpace()
+            
+        case BIDownloadErrorCode.authenticationError.rawValue:
+            showAlert(title: "Authentication Failed", message: "Please login again")
+            requestNewCredentials()
+            
+        case BIDownloadErrorCode.insufficientSpace.rawValue:
+            showAlert(title: "Storage Full", message: "Free up some space and try again")
+            
+        default:
+            showAlert(title: "Download Failed", message: error.localizedDescription)
+        }
+    }
+}</code></pre>
+
+                <h3>Objective-C Implementation</h3>
+                <pre><code>- (void)downloadDidFail:(BIDownloadTask *)task error:(NSError *)error {
+    switch (error.code) {
+        case BIDownloadErrorCodeInvalidURL:
+            [self showAlertWithTitle:@"Invalid URL" 
+                             message:@"Please check the download URL"];
+            break;
+            
+        case BIDownloadErrorCodeNetworkError:
+            [self showAlertWithTitle:@"Network Error" 
+                             message:@"Check your internet connection"];
+            [self retryDownloadAfterDelay:task];
+            break;
+            
+        case BIDownloadErrorCodeFileSystemError:
+            [self showAlertWithTitle:@"Storage Error" 
+                             message:@"Unable to save file"];
+            [self checkDiskSpace];
+            break;
+            
+        case BIDownloadErrorCodeAuthenticationError:
+            [self showAlertWithTitle:@"Authentication Failed" 
+                             message:@"Please login again"];
+            [self requestNewCredentials];
+            break;
+            
+        case BIDownloadErrorCodeInsufficientSpace:
+            [self showAlertWithTitle:@"Storage Full" 
+                             message:@"Free up some space and try again"];
+            break;
+            
+        default:
+            [self showAlertWithTitle:@"Download Failed" 
+                             message:error.localizedDescription];
+            break;
+    }
+}</code></pre>
+            </section>
+
+            <section id="retry-mechanism">
+                <h2>Automatic Retry Mechanism</h2>
+
+                <h3>Exponential Backoff Strategy</h3>
+                <pre><code>// Swift
+class RetryManager {
+    private var retryAttempts: [String: Int] = [:]
+    private let maxRetries = 3
+    
+    func shouldRetry(taskId: String) -> Bool {
+        let attempts = retryAttempts[taskId, default: 0]
+        return attempts < maxRetries
+    }
+    
+    func getRetryDelay(taskId: String) -> TimeInterval {
+        let attempts = retryAttempts[taskId, default: 0]
+        // Exponential backoff: 2^attempts seconds
+        return pow(2.0, Double(attempts))
+    }
+    
+    func recordRetry(taskId: String) {
+        retryAttempts[taskId, default: 0] += 1
+    }
+    
+    func resetRetries(taskId: String) {
+        retryAttempts.removeValue(forKey: taskId)
+    }
+}
+
+// Usage
+let retryManager = RetryManager()
+
+func downloadDidFail(_ task: BIDownloadTask, error: Error) {
+    let nsError = error as NSError
+    
+    // Only retry network errors
+    guard nsError.code == BIDownloadErrorCode.networkError.rawValue else {
+        print("Non-retryable error: \(error)")
+        return
+    }
+    
+    if retryManager.shouldRetry(taskId: task.id) {
+        let delay = retryManager.getRetryDelay(taskId: task.id)
+        retryManager.recordRetry(taskId: task.id)
+        
+        print("Retrying in \(delay) seconds (attempt \(retryManager.retryAttempts[task.id] ?? 0)/\(retryManager.maxRetries))")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            self.retryDownload(task)
+        }
+    } else {
+        print("Max retries exceeded for task \(task.id)")
+        retryManager.resetRetries(taskId: task.id)
+        showFinalError(task, error: error)
+    }
+}
+
+func retryDownload(_ task: BIDownloadTask) {
+    // Create new download with same parameters
+    let newTask = BIDownloadManager.shared.download(
+        url: task.url,
+        destinationPath: task.destinationPath,
+        options: task.options
+    )
+    newTask.delegate = self
+}
+
+func downloadDidComplete(_ task: BIDownloadTask, filePath: String) {
+    // Reset retry counter on success
+    retryManager.resetRetries(taskId: task.id)
+    print("Download completed: \(filePath)")
+}</code></pre>
+
+                <h3>Objective-C Implementation</h3>
+                <pre><code>@interface RetryManager : NSObject
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *retryAttempts;
+@property (nonatomic, assign) NSInteger maxRetries;
+@end
+
+@implementation RetryManager
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _retryAttempts = [NSMutableDictionary dictionary];
+        _maxRetries = 3;
+    }
+    return self;
+}
+
+- (BOOL)shouldRetryForTaskId:(NSString *)taskId {
+    NSInteger attempts = [self.retryAttempts[taskId] integerValue];
+    return attempts < self.maxRetries;
+}
+
+- (NSTimeInterval)getRetryDelayForTaskId:(NSString *)taskId {
+    NSInteger attempts = [self.retryAttempts[taskId] integerValue];
+    return pow(2.0, attempts);
+}
+
+- (void)recordRetryForTaskId:(NSString *)taskId {
+    NSInteger attempts = [self.retryAttempts[taskId] integerValue];
+    self.retryAttempts[taskId] = @(attempts + 1);
+}
+
+- (void)resetRetriesForTaskId:(NSString *)taskId {
+    [self.retryAttempts removeObjectForKey:taskId];
+}
+
+@end</code></pre>
+            </section>
+
+            <section id="network-errors">
+                <h2>Network Error Handling</h2>
+
+                <h3>Common Network Issues</h3>
+                <pre><code>func handleNetworkError(_ error: Error, task: BIDownloadTask) {
+    let nsError = error as NSError
+    
+    if let underlyingError = nsError.userInfo[NSUnderlyingErrorKey] as? NSError {
+        switch underlyingError.code {
+        case NSURLErrorNotConnectedToInternet:
+            print("No internet connection")
+            // Wait for network and retry
+            monitorNetworkAndRetry(task)
+            
+        case NSURLErrorTimedOut:
+            print("Request timed out")
+            // Retry immediately
+            retryDownload(task)
+            
+        case NSURLErrorCannotFindHost:
+            print("Cannot find host")
+            // Don't retry, show error
+            showError("Server not found")
+            
+        case NSURLErrorNetworkConnectionLost:
+            print("Connection lost")
+            // Retry after delay
+            retryAfterDelay(task, delay: 5.0)
+            
+        default:
+            print("Network error: \(underlyingError.localizedDescription)")
+        }
+    }
+}
+
+func monitorNetworkAndRetry(_ task: BIDownloadTask) {
+    import Network
+    
+    let monitor = NWPathMonitor()
+    monitor.pathUpdateHandler = { [weak self] path in
+        if path.status == .satisfied {
+            print("Network available, retrying download")
+            monitor.cancel()
+            self?.retryDownload(task)
+        }
+    }
+    monitor.start(queue: DispatchQueue.global())
+}</code></pre>
+            </section>
+
+            <section id="disk-space">
+                <h2>Disk Space Management</h2>
+
+                <h3>Check Available Space</h3>
+                <pre><code>// Swift
+func checkDiskSpace() -> (available: Int64, required: Int64)? {
+    guard let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else {
+        return nil
+    }
+    
+    do {
+        let attributes = try FileManager.default.attributesOfFileSystem(forPath: path)
+        
+        if let freeSpace = attributes[.systemFreeSize] as? Int64 {
+            let requiredSpace: Int64 = 100 * 1024 * 1024 // 100 MB buffer
+            return (available: freeSpace, required: requiredSpace)
+        }
+    } catch {
+        print("Error checking disk space: \(error)")
+    }
+    
+    return nil
+}
+
+func downloadDidFail(_ task: BIDownloadTask, error: Error) {
+    let nsError = error as NSError
+    
+    if nsError.code == BIDownloadErrorCode.insufficientSpace.rawValue {
+        if let space = checkDiskSpace() {
+            let availableMB = space.available / 1024 / 1024
+            let requiredMB = space.required / 1024 / 1024
+            
+            let message = """
+            Not enough storage space available.
+            Available: \(availableMB) MB
+            Required: \(requiredMB) MB
+            
+            Please free up some space and try again.
+            """
+            
+            showAlert(title: "Storage Full", message: message)
+        }
+    }
+}</code></pre>
+
+                <h3>Objective-C Implementation</h3>
+                <pre><code>- (void)checkDiskSpace {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:paths.firstObject error:nil];
+    
+    NSNumber *freeSpace = attributes[NSFileSystemFreeSize];
+    int64_t availableBytes = [freeSpace longLongValue];
+    int64_t availableMB = availableBytes / 1024 / 1024;
+    
+    NSLog(@"Available space: %lld MB", availableMB);
+    
+    if (availableMB < 100) {
+        [self showStorageWarning];
+    }
+}</code></pre>
+            </section>
+
+            <section id="user-feedback">
+                <h2>User Feedback</h2>
+
+                <h3>Progress Indicators</h3>
+                <pre><code>// Swift
+class DownloadViewController: UIViewController {
+    @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var errorLabel: UILabel!
+    
+    func downloadDidStart(_ task: BIDownloadTask) {
+        DispatchQueue.main.async {
+            self.progressView.isHidden = false
+            self.statusLabel.text = "Downloading..."
+            self.errorLabel.isHidden = true
+        }
+    }
+    
+    func downloadDidProgress(_ task: BIDownloadTask, progress: Double) {
+        DispatchQueue.main.async {
+            self.progressView.progress = Float(progress)
+            let percentage = Int(progress * 100)
+            self.statusLabel.text = "Downloading: \(percentage)%"
+        }
+    }
+    
+    func downloadDidFail(_ task: BIDownloadTask, error: Error) {
+        DispatchQueue.main.async {
+            self.progressView.isHidden = true
+            self.statusLabel.text = "Download failed"
+            self.errorLabel.text = self.getUserFriendlyErrorMessage(error)
+            self.errorLabel.isHidden = false
+        }
+    }
+    
+    func getUserFriendlyErrorMessage(_ error: Error) -> String {
+        let nsError = error as NSError
+        
+        switch nsError.code {
+        case BIDownloadErrorCode.networkError.rawValue:
+            return "Please check your internet connection and try again."
+            
+        case BIDownloadErrorCode.insufficientSpace.rawValue:
+            return "Not enough storage space. Please free up some space."
+            
+        case BIDownloadErrorCode.authenticationError.rawValue:
+            return "Authentication failed. Please login again."
+            
+        case BIDownloadErrorCode.serverError.rawValue:
+            if let serverCode = nsError.userInfo["ServerCode"] as? Int {
+                switch serverCode {
+                case 404:
+                    return "File not found on server."
+                case 500:
+                    return "Server error. Please try again later."
+                case 503:
+                    return "Service temporarily unavailable."
+                default:
+                    return "Server error (\(serverCode)). Please try again."
+                }
+            }
+            return "Server error. Please try again later."
+            
+        default:
+            return "Download failed. Please try again."
+        }
+    }
+}</code></pre>
+            </section>
+
+            <section id="logging">
+                <h2>Error Logging</h2>
+
+                <h3>Debug Logging</h3>
+                <pre><code>// Enable detailed logging
+var config = BIDownloadManagerConfiguration()
+config.enableLogging = true
+config.logLevel = .verbose
+BIDownloadManager.shared.configure(config)
+
+// Custom error logger
+class ErrorLogger {
+    static func logError(_ error: Error, task: BIDownloadTask) {
+        let timestamp = DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .long)
+        let nsError = error as NSError
+        
+        var logMessage = """
+        [\(timestamp)] Download Error
+        Task ID: \(task.id)
+        URL: \(task.url.absoluteString)
+        Error Code: \(nsError.code)
+        Error Domain: \(nsError.domain)
+        Description: \(error.localizedDescription)
+        """
+        
+        if let userInfo = nsError.userInfo as? [String: Any] {
+            logMessage += "\nUser Info:"
+            for (key, value) in userInfo {
+                logMessage += "\n  \(key): \(value)"
+            }
+        }
+        
+        print(logMessage)
+        
+        // Save to file for crash reports
+        saveToErrorLog(logMessage)
+    }
+    
+    static func saveToErrorLog(_ message: String) {
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let logFile = documentsPath.appendingPathComponent("download_errors.log")
+        
+        let logEntry = "\n---\n\(message)\n"
+        
+        if let data = logEntry.data(using: .utf8) {
+            if FileManager.default.fileExists(atPath: logFile.path) {
+                if let fileHandle = try? FileHandle(forWritingTo: logFile) {
+                    fileHandle.seekToEndOfFile()
+                    fileHandle.write(data)
+                    fileHandle.closeFile()
+                }
+            } else {
+                try? data.write(to: logFile)
+            }
+        }
+    }
+}
+
+// Usage
+func downloadDidFail(_ task: BIDownloadTask, error: Error) {
+    ErrorLogger.logError(error, task: task)
+    // Handle error...
+}</code></pre>
+            </section>
+
+            <section id="recovery-strategies">
+                <h2>Recovery Strategies</h2>
+
+                <h3>Strategy Matrix</h3>
+                <table>
+                    <tr>
+                        <th>Error Type</th>
+                        <th>Strategy</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr>
+                        <td>Network Timeout</td>
+                        <td>Immediate Retry</td>
+                        <td>Retry 3 times with exponential backoff</td>
+                    </tr>
+                    <tr>
+                        <td>No Internet</td>
+                        <td>Wait and Retry</td>
+                        <td>Monitor network, retry when available</td>
+                    </tr>
+                    <tr>
+                        <td>Server 5xx</td>
+                        <td>Delayed Retry</td>
+                        <td>Wait 30s-5min, retry</td>
+                    </tr>
+                    <tr>
+                        <td>Server 404</td>
+                        <td>No Retry</td>
+                        <td>Show error, don't retry</td>
+                    </tr>
+                    <tr>
+                        <td>Auth Failed</td>
+                        <td>Refresh Credentials</td>
+                        <td>Refresh token, retry with new credentials</td>
+                    </tr>
+                    <tr>
+                        <td>Disk Full</td>
+                        <td>User Action Required</td>
+                        <td>Prompt user to free space</td>
+                    </tr>
+                    <tr>
+                        <td>Invalid URL</td>
+                        <td>No Retry</td>
+                        <td>Fix URL, don't retry automatically</td>
+                    </tr>
+                </table>
+
+                <h3>Implementation</h3>
+                <pre><code>func handleError(_ error: Error, task: BIDownloadTask) -> RecoveryAction {
+    let nsError = error as NSError
+    
+    switch nsError.code {
+    case BIDownloadErrorCode.networkError.rawValue:
+        // Check specific network error
+        if let underlying = nsError.userInfo[NSUnderlyingErrorKey] as? NSError {
+            switch underlying.code {
+            case NSURLErrorTimedOut:
+                return .retryImmediately
+            case NSURLErrorNotConnectedToInternet:
+                return .waitForNetwork
+            default:
+                return .retryWithBackoff
+            }
+        }
+        return .retryWithBackoff
+        
+    case BIDownloadErrorCode.serverError.rawValue:
+        if let serverCode = nsError.userInfo["ServerCode"] as? Int {
+            switch serverCode {
+            case 500...599:
+                return .retryDelayed
+            case 404:
+                return .noRetry("File not found")
+            case 401, 403:
+                return .refreshAuth
+            default:
+                return .noRetry("Server error")
+            }
+        }
+        return .noRetry("Unknown server error")
+        
+    case BIDownloadErrorCode.authenticationError.rawValue:
+        return .refreshAuth
+        
+    case BIDownloadErrorCode.insufficientSpace.rawValue:
+        return .userActionRequired("Free up disk space")
+        
+    case BIDownloadErrorCode.invalidURL.rawValue:
+        return .noRetry("Invalid URL")
+        
+    default:
+        return .retryWithBackoff
+    }
+}
+
+enum RecoveryAction {
+    case retryImmediately
+    case retryWithBackoff
+    case retryDelayed
+    case waitForNetwork
+    case refreshAuth
+    case userActionRequired(String)
+    case noRetry(String)
+}</code></pre>
+            </section>
+
+            <section id="best-practices">
+                <h2>Error Handling Best Practices</h2>
+
+                <ul>
+                    <li><strong>Always handle errors</strong> - Never ignore <code>downloadDidFail</code> callback</li>
+                    <li><strong>Provide user feedback</strong> - Show clear, actionable error messages</li>
+                    <li><strong>Log errors</strong> - Keep error logs for debugging and analytics</li>
+                    <li><strong>Implement retry logic</strong> - Use exponential backoff for network errors</li>
+                    <li><strong>Check preconditions</strong> - Validate disk space, network before starting</li>
+                    <li><strong>Handle authentication</strong> - Refresh tokens automatically when possible</li>
+                    <li><strong>Clean up resources</strong> - Delete partial files on failure</li>
+                    <li><strong>Monitor network</strong> - Detect network changes and adapt</li>
+                    <li><strong>Test edge cases</strong> - Simulate errors in testing</li>
+                    <li><strong>Graceful degradation</strong> - Fall back to single-threaded if multipart fails</li>
+                </ul>
+
+                <div class="alert alert-success">
+                    <strong>Pro Tip:</strong> Use analytics to track error rates and identify patterns. This helps improve reliability and user experience.
+                </div>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 BICurlDownloader. All rights reserved.</p>
+                <p>Documentation Version 1.0.0 | Framework Version 1.0.0</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

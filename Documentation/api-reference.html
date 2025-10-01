@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - BICurlDownloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>BICurlDownloader</h1>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="overview.html">Overview</a></li>
+                    <li><a href="installation.html">Installation</a></li>
+                    <li><a href="quick-start.html">Quick Start</a></li>
+                    <li><a href="core-components.html">Core Components</a></li>
+                    <li><a href="usage-examples.html">Usage Examples</a></li>
+                    <li><a href="background-download.html">Background Download</a></li>
+                    <li><a href="multipart-download.html">Multipart Download</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="error-handling.html">Error Handling</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="api-reference.html" class="active">API Reference</a></li>
+                    <li><a href="advanced-examples.html">Advanced Examples</a></li>
+                    <li><a href="best-practices.html">Best Practices</a></li>
+                    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>API Reference</h1>
+            <p class="subtitle">Complete API Documentation for BICurlDownloader</p>
+
+            <section id="bidownloadmanager">
+                <h2>BIDownloadManager</h2>
+                <p>Main download manager singleton class for managing all downloads.</p>
+
+                <h3>Instance</h3>
+                <table>
+                    <tr>
+                        <th>Property</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>shared</code></td>
+                        <td>BIDownloadManager</td>
+                        <td>Singleton instance</td>
+                    </tr>
+                </table>
+
+                <h3>Methods</h3>
+                <table>
+                    <tr>
+                        <th>Method</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>configure(_:)</code></td>
+                        <td>Configure manager with custom settings</td>
+                    </tr>
+                    <tr>
+                        <td><code>download(url:destinationPath:options:)</code></td>
+                        <td>Create and start a download task</td>
+                    </tr>
+                    <tr>
+                        <td><code>download(url:destinationPath:options:note:)</code></td>
+                        <td>Create download task with custom note</td>
+                    </tr>
+                    <tr>
+                        <td><code>quickDownload(from:to:completion:)</code></td>
+                        <td>Quick download with completion handler</td>
+                    </tr>
+                    <tr>
+                        <td><code>pauseAll()</code></td>
+                        <td>Pause all active downloads</td>
+                    </tr>
+                    <tr>
+                        <td><code>resumeAll()</code></td>
+                        <td>Resume all paused downloads</td>
+                    </tr>
+                    <tr>
+                        <td><code>cancelAll()</code></td>
+                        <td>Cancel all downloads</td>
+                    </tr>
+                    <tr>
+                        <td><code>getActiveTasks()</code></td>
+                        <td>Get currently downloading tasks</td>
+                    </tr>
+                    <tr>
+                        <td><code>getQueuedTasks()</code></td>
+                        <td>Get tasks waiting in queue</td>
+                    </tr>
+                    <tr>
+                        <td><code>getAllTasks()</code></td>
+                        <td>Get all tasks</td>
+                    </tr>
+                    <tr>
+                        <td><code>getTask(byId:)</code></td>
+                        <td>Find task by ID</td>
+                    </tr>
+                    <tr>
+                        <td><code>getTasks(forURL:)</code></td>
+                        <td>Find tasks by URL</td>
+                    </tr>
+                    <tr>
+                        <td><code>getTasks(withNote:)</code></td>
+                        <td>Find tasks by note</td>
+                    </tr>
+                    <tr>
+                        <td><code>checkBackgroundAudioAvailability()</code></td>
+                        <td>Check background download capability</td>
+                    </tr>
+                    <tr>
+                        <td><code>getDownloadStatistics()</code></td>
+                        <td>Get download statistics</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="bidownloadtask">
+                <h2>BIDownloadTask</h2>
+                <p>Represents an individual download task.</p>
+
+                <h3>Properties</h3>
+                <table>
+                    <tr>
+                        <th>Property</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>id</code></td>
+                        <td>String</td>
+                        <td>Unique task identifier</td>
+                    </tr>
+                    <tr>
+                        <td><code>url</code></td>
+                        <td>URL</td>
+                        <td>Download URL</td>
+                    </tr>
+                    <tr>
+                        <td><code>destinationPath</code></td>
+                        <td>String</td>
+                        <td>File destination path</td>
+                    </tr>
+                    <tr>
+                        <td><code>options</code></td>
+                        <td>BIDownloadOptions</td>
+                        <td>Download options</td>
+                    </tr>
+                    <tr>
+                        <td><code>state</code></td>
+                        <td>BIDownloadState</td>
+                        <td>Current download state</td>
+                    </tr>
+                    <tr>
+                        <td><code>progress</code></td>
+                        <td>Progress</td>
+                        <td>Progress object</td>
+                    </tr>
+                    <tr>
+                        <td><code>note</code></td>
+                        <td>String?</td>
+                        <td>Custom note/tag</td>
+                    </tr>
+                    <tr>
+                        <td><code>delegate</code></td>
+                        <td>BIDownloadDelegate?</td>
+                        <td>Delegate for callbacks</td>
+                    </tr>
+                </table>
+
+                <h3>Methods</h3>
+                <table>
+                    <tr>
+                        <th>Method</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>pause()</code></td>
+                        <td>Pause the download</td>
+                    </tr>
+                    <tr>
+                        <td><code>resume()</code></td>
+                        <td>Resume the download</td>
+                    </tr>
+                    <tr>
+                        <td><code>cancel()</code></td>
+                        <td>Cancel the download</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="bidownloadoptions">
+                <h2>BIDownloadOptions</h2>
+                <p>Configuration options for downloads.</p>
+
+                <h3>Properties</h3>
+                <table>
+                    <tr>
+                        <th>Property</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>maxConcurrentStreams</code></td>
+                        <td>Int</td>
+                        <td>4</td>
+                        <td>Max parallel streams per file</td>
+                    </tr>
+                    <tr>
+                        <td><code>enableBackgroundAudio</code></td>
+                        <td>Bool</td>
+                        <td>true</td>
+                        <td>Enable background downloads</td>
+                    </tr>
+                    <tr>
+                        <td><code>allowsCellularAccess</code></td>
+                        <td>Bool</td>
+                        <td>true</td>
+                        <td>Allow downloads over cellular</td>
+                    </tr>
+                    <tr>
+                        <td><code>timeoutInterval</code></td>
+                        <td>TimeInterval</td>
+                        <td>60</td>
+                        <td>Request timeout in seconds</td>
+                    </tr>
+                    <tr>
+                        <td><code>enableMultipart</code></td>
+                        <td>Bool</td>
+                        <td>true</td>
+                        <td>Enable multipart downloads</td>
+                    </tr>
+                    <tr>
+                        <td><code>authentication</code></td>
+                        <td>BIAuthenticationOptions?</td>
+                        <td>nil</td>
+                        <td>Authentication options</td>
+                    </tr>
+                    <tr>
+                        <td><code>customHeaders</code></td>
+                        <td>[String: String]</td>
+                        <td>[:]</td>
+                        <td>Custom HTTP headers</td>
+                    </tr>
+                    <tr>
+                        <td><code>userAgent</code></td>
+                        <td>String</td>
+                        <td>"BICurlDownloader/1.0"</td>
+                        <td>User-Agent header</td>
+                    </tr>
+                    <tr>
+                        <td><code>sslVerification</code></td>
+                        <td>Bool</td>
+                        <td>true</td>
+                        <td>Verify SSL certificates</td>
+                    </tr>
+                </table>
+
+                <h3>Static Properties</h3>
+                <table>
+                    <tr>
+                        <th>Property</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>default</code></td>
+                        <td>Default options instance</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="biauthenticationoptions">
+                <h2>BIAuthenticationOptions</h2>
+                <p>Authentication configuration for downloads.</p>
+
+                <h3>Initializers</h3>
+                <table>
+                    <tr>
+                        <th>Method</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>init(basicWithUsername:password:)</code></td>
+                        <td>Create Basic authentication</td>
+                    </tr>
+                    <tr>
+                        <td><code>init(digestWithUsername:password:)</code></td>
+                        <td>Create Digest authentication</td>
+                    </tr>
+                    <tr>
+                        <td><code>init(bearerToken:)</code></td>
+                        <td>Create Bearer token authentication</td>
+                    </tr>
+                    <tr>
+                        <td><code>init(customWithHeader:value:)</code></td>
+                        <td>Create custom header authentication</td>
+                    </tr>
+                </table>
+
+                <h3>Example</h3>
+                <pre><code>// Basic Auth
+let auth = BIAuthenticationOptions(
+    basicWithUsername: "user",
+    password: "password"
+)
+
+// Bearer Token
+let auth = BIAuthenticationOptions(
+    bearerToken: "your_token_here"
+)
+
+// Custom Header
+let auth = BIAuthenticationOptions(
+    customWithHeader: "X-API-Key",
+    value: "your_api_key"
+)</code></pre>
+            </section>
+
+            <section id="bidownloadmanagerconfiguration">
+                <h2>BIDownloadManagerConfiguration</h2>
+                <p>Global configuration for the download manager.</p>
+
+                <h3>Properties</h3>
+                <table>
+                    <tr>
+                        <th>Property</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>maxConcurrentDownloads</code></td>
+                        <td>Int</td>
+                        <td>3</td>
+                        <td>Max simultaneous downloads</td>
+                    </tr>
+                    <tr>
+                        <td><code>defaultTimeoutInterval</code></td>
+                        <td>TimeInterval</td>
+                        <td>60</td>
+                        <td>Default timeout for all downloads</td>
+                    </tr>
+                    <tr>
+                        <td><code>enableLogging</code></td>
+                        <td>Bool</td>
+                        <td>false</td>
+                        <td>Enable framework logging</td>
+                    </tr>
+                    <tr>
+                        <td><code>logLevel</code></td>
+                        <td>BILogLevel</td>
+                        <td>.info</td>
+                        <td>Logging verbosity level</td>
+                    </tr>
+                    <tr>
+                        <td><code>cacheDirectory</code></td>
+                        <td>String</td>
+                        <td>"BICurlDownloads"</td>
+                        <td>Cache directory name</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="bidownloadstate">
+                <h2>BIDownloadState</h2>
+                <p>Enumeration of possible download states.</p>
+
+                <h3>Cases</h3>
+                <table>
+                    <tr>
+                        <th>Case</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>pending</code></td>
+                        <td>Download is waiting to start</td>
+                    </tr>
+                    <tr>
+                        <td><code>downloading</code></td>
+                        <td>Download is in progress</td>
+                    </tr>
+                    <tr>
+                        <td><code>paused</code></td>
+                        <td>Download is paused</td>
+                    </tr>
+                    <tr>
+                        <td><code>completed</code></td>
+                        <td>Download completed successfully</td>
+                    </tr>
+                    <tr>
+                        <td><code>failed</code></td>
+                        <td>Download failed with error</td>
+                    </tr>
+                    <tr>
+                        <td><code>cancelled</code></td>
+                        <td>Download was cancelled</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="bidownloaddelegate">
+                <h2>BIDownloadDelegate</h2>
+                <p>Protocol for receiving download events.</p>
+
+                <h3>Methods</h3>
+                <table>
+                    <tr>
+                        <th>Method</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>downloadDidStart(_:)</code></td>
+                        <td>Called when download starts</td>
+                    </tr>
+                    <tr>
+                        <td><code>downloadDidProgress(_:progress:)</code></td>
+                        <td>Called with progress updates (0.0 to 1.0)</td>
+                    </tr>
+                    <tr>
+                        <td><code>downloadDidComplete(_:filePath:)</code></td>
+                        <td>Called when download completes</td>
+                    </tr>
+                    <tr>
+                        <td><code>downloadDidFail(_:error:)</code></td>
+                        <td>Called when download fails</td>
+                    </tr>
+                </table>
+
+                <h3>Example Implementation</h3>
+                <pre><code>// Swift
+extension MyClass: BIDownloadDelegate {
+    func downloadDidStart(_ task: BIDownloadTask) {
+        print("Started: \(task.id)")
+    }
+    
+    func downloadDidProgress(_ task: BIDownloadTask, progress: Double) {
+        print("Progress: \(Int(progress * 100))%")
+    }
+    
+    func downloadDidComplete(_ task: BIDownloadTask, filePath: String) {
+        print("Completed: \(filePath)")
+    }
+    
+    func downloadDidFail(_ task: BIDownloadTask, error: Error) {
+        print("Failed: \(error)")
+    }
+}
+
+// Objective-C
+@interface MyClass : NSObject &lt;BIDownloadDelegate&gt;
+@end
+
+@implementation MyClass
+
+- (void)downloadDidStart:(BIDownloadTask *)task {
+    NSLog(@"Started: %@", task.taskId);
+}
+
+- (void)downloadDidProgress:(BIDownloadTask *)task progress:(double)progress {
+    NSLog(@"Progress: %ld%%", (long)(progress * 100));
+}
+
+- (void)downloadDidComplete:(BIDownloadTask *)task filePath:(NSString *)filePath {
+    NSLog(@"Completed: %@", filePath);
+}
+
+- (void)downloadDidFail:(BIDownloadTask *)task error:(NSError *)error {
+    NSLog(@"Failed: %@", error);
+}
+
+@end</code></pre>
+            </section>
+
+            <section id="biloglevel">
+                <h2>BILogLevel</h2>
+                <p>Logging verbosity levels.</p>
+
+                <h3>Cases</h3>
+                <table>
+                    <tr>
+                        <th>Case</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>verbose</code></td>
+                        <td>All messages including trace</td>
+                    </tr>
+                    <tr>
+                        <td><code>debug</code></td>
+                        <td>Debug information</td>
+                    </tr>
+                    <tr>
+                        <td><code>info</code></td>
+                        <td>Informational messages</td>
+                    </tr>
+                    <tr>
+                        <td><code>warning</code></td>
+                        <td>Warning messages only</td>
+                    </tr>
+                    <tr>
+                        <td><code>error</code></td>
+                        <td>Error messages only</td>
+                    </tr>
+                    <tr>
+                        <td><code>none</code></td>
+                        <td>No logging</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="bidownloaderror">
+                <h2>BIDownloadError</h2>
+                <p>Error types and codes.</p>
+
+                <h3>Error Codes</h3>
+                <table>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>1001</td>
+                        <td><code>invalidURL</code></td>
+                        <td>Invalid URL provided</td>
+                    </tr>
+                    <tr>
+                        <td>1002</td>
+                        <td><code>networkError</code></td>
+                        <td>Network communication error</td>
+                    </tr>
+                    <tr>
+                        <td>1003</td>
+                        <td><code>fileSystemError</code></td>
+                        <td>File system operation failed</td>
+                    </tr>
+                    <tr>
+                        <td>1004</td>
+                        <td><code>curlError</code></td>
+                        <td>cURL library error</td>
+                    </tr>
+                    <tr>
+                        <td>1005</td>
+                        <td><code>audioSessionError</code></td>
+                        <td>Audio session error</td>
+                    </tr>
+                    <tr>
+                        <td>1006</td>
+                        <td><code>validationError</code></td>
+                        <td>Data validation failed</td>
+                    </tr>
+                    <tr>
+                        <td>1007</td>
+                        <td><code>authenticationError</code></td>
+                        <td>Authentication failed</td>
+                    </tr>
+                    <tr>
+                        <td>1008</td>
+                        <td><code>serverError</code></td>
+                        <td>Server returned error</td>
+                    </tr>
+                    <tr>
+                        <td>1009</td>
+                        <td><code>rangeNotSupported</code></td>
+                        <td>Server doesn't support Range requests</td>
+                    </tr>
+                    <tr>
+                        <td>1010</td>
+                        <td><code>insufficientSpace</code></td>
+                        <td>Not enough disk space</td>
+                    </tr>
+                </table>
+
+                <h3>Static Factory Methods (Objective-C)</h3>
+                <pre><code>+ (BIDownloadError *)invalidURL;
++ (BIDownloadError *)networkError:(NSError *)underlyingError;
++ (BIDownloadError *)fileSystemError:(NSError *)underlyingError;
++ (BIDownloadError *)curlErrorWithCode:(NSInteger)code message:(NSString *)message;
++ (BIDownloadError *)validationError:(NSString *)message;
++ (BIDownloadError *)rangeNotSupported;
++ (BIDownloadError *)insufficientSpace;
++ (BIDownloadError *)serverErrorWithCode:(NSInteger)code message:(NSString *)message;</code></pre>
+            </section>
+
+            <section id="bicurldownloaderinfo">
+                <h2>BICurlDownloaderInfo</h2>
+                <p>Framework version and capability information.</p>
+
+                <h3>Static Properties</h3>
+                <table>
+                    <tr>
+                        <th>Property</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>frameworkVersion</code></td>
+                        <td>String</td>
+                        <td>Framework version number</td>
+                    </tr>
+                    <tr>
+                        <td><code>build</code></td>
+                        <td>String</td>
+                        <td>Build number</td>
+                    </tr>
+                    <tr>
+                        <td><code>name</code></td>
+                        <td>String</td>
+                        <td>Framework name</td>
+                    </tr>
+                    <tr>
+                        <td><code>fullVersion</code></td>
+                        <td>String</td>
+                        <td>Full version string</td>
+                    </tr>
+                    <tr>
+                        <td><code>userAgent</code></td>
+                        <td>String</td>
+                        <td>Default User-Agent string</td>
+                    </tr>
+                    <tr>
+                        <td><code>isCompatible</code></td>
+                        <td>Bool</td>
+                        <td>iOS version compatibility</td>
+                    </tr>
+                    <tr>
+                        <td><code>supportedFeatures</code></td>
+                        <td>[String]</td>
+                        <td>List of supported features</td>
+                    </tr>
+                </table>
+
+                <h3>Example</h3>
+                <pre><code>// Swift
+print(BICurlDownloaderInfo.fullVersion)
+// Output: BICurlDownloader v1.0.0 (1)
+
+print(BICurlDownloaderInfo.supportedFeatures)
+// Output: ["cURL Integration", "Multipart Downloads", "Authentication", ...]
+
+// Objective-C
+NSLog(@"%@", [BICurlDownloaderInfo fullVersion]);
+NSLog(@"%@", [BICurlDownloaderInfo supportedFeatures]);</code></pre>
+            </section>
+
+            <section id="notifications">
+                <h2>Notification Names</h2>
+                <p>System notifications posted by the framework.</p>
+
+                <h3>Available Notifications</h3>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>UserInfo Keys</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>BIDownloadNotification.managerStateDidChange</code></td>
+                        <td><code>activeTasksCount</code>, <code>queuedTasksCount</code></td>
+                        <td>Manager state changed</td>
+                    </tr>
+                    <tr>
+                        <td><code>BIDownloadNotification.taskDidStart</code></td>
+                        <td><code>task</code></td>
+                        <td>Task started</td>
+                    </tr>
+                    <tr>
+                        <td><code>BIDownloadNotification.taskDidUpdateProgress</code></td>
+                        <td><code>task</code>, <code>progress</code>, <code>bytesDownloaded</code>, <code>totalBytes</code></td>
+                        <td>Progress updated</td>
+                    </tr>
+                    <tr>
+                        <td><code>BIDownloadNotification.taskDidComplete</code></td>
+                        <td><code>task</code>, <code>filePath</code></td>
+                        <td>Task completed</td>
+                    </tr>
+                    <tr>
+                        <td><code>BIDownloadNotification.taskDidFail</code></td>
+                        <td><code>task</code>, <code>error</code></td>
+                        <td>Task failed</td>
+                    </tr>
+                    <tr>
+                        <td><code>BIDownloadNotification.taskDidPause</code></td>
+                        <td><code>task</code></td>
+                        <td>Task paused</td>
+                    </tr>
+                    <tr>
+                        <td><code>BIDownloadNotification.taskDidResume</code></td>
+                        <td><code>task</code></td>
+                        <td>Task resumed</td>
+                    </tr>
+                    <tr>
+                        <td><code>BIDownloadNotification.taskDidCancel</code></td>
+                        <td><code>task</code></td>
+                        <td>Task cancelled</td>
+                    </tr>
+                </table>
+
+                <p>See <a href="notifications.html">Notifications documentation</a> for usage examples.</p>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 BICurlDownloader. All rights reserved.</p>
+                <p>Documentation Version 1.0.0 | Framework Version 1.0.0</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

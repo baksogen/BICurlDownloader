@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Practices - BICurlDownloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>BICurlDownloader</h1>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="overview.html">Overview</a></li>
+                    <li><a href="installation.html">Installation</a></li>
+                    <li><a href="quick-start.html">Quick Start</a></li>
+                    <li><a href="core-components.html">Core Components</a></li>
+                    <li><a href="usage-examples.html">Usage Examples</a></li>
+                    <li><a href="background-download.html">Background Download</a></li>
+                    <li><a href="multipart-download.html">Multipart Download</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="error-handling.html">Error Handling</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="api-reference.html">API Reference</a></li>
+                    <li><a href="advanced-examples.html">Advanced Examples</a></li>
+                    <li><a href="best-practices.html" class="active">Best Practices</a></li>
+                    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1>Best Practices</h1>
+            <p class="subtitle">Guidelines for optimal framework usage</p>
+
+            <section id="performance">
+                <h2>Performance Optimization</h2>
+                <ul>
+                    <li>Use multipart downloads for files larger than 50 MB</li>
+                    <li>Limit concurrent downloads to 2-4 on mobile devices</li>
+                    <li>Adjust stream count based on network type (WiFi vs Cellular)</li>
+                    <li>Enable background audio only when necessary</li>
+                    <li>Clean up completed downloads to free disk space</li>
+                </ul>
+            </section>
+
+            <section id="memory">
+                <h2>Memory Management</h2>
+                <ul>
+                    <li>Keep strong references to download tasks until completion</li>
+                    <li>Remove notification observers in deinit/dealloc</li>
+                    <li>Use weak self in closures to avoid retain cycles</li>
+                    <li>Cancel downloads when view controllers are dismissed</li>
+                </ul>
+                
+                <pre><code>class DownloadViewController: UIViewController {
+    var downloadTask: BIDownloadTask?
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if isMovingFromParent {
+            downloadTask?.cancel()
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+}</code></pre>
+            </section>
+
+            <section id="error-handling-bp">
+                <h2>Error Handling</h2>
+                <ul>
+                    <li>Always implement downloadDidFail delegate method</li>
+                    <li>Use exponential backoff for retry logic</li>
+                    <li>Check disk space before starting large downloads</li>
+                    <li>Handle authentication errors gracefully</li>
+                    <li>Provide clear error messages to users</li>
+                </ul>
+            </section>
+
+            <section id="security">
+                <h2>Security</h2>
+                <ul>
+                    <li>Always use HTTPS for downloads</li>
+                    <li>Store credentials in Keychain, not UserDefaults</li>
+                    <li>Validate SSL certificates (sslVerification = true)</li>
+                    <li>Don't hardcode API keys or tokens</li>
+                    <li>Implement token refresh for expired credentials</li>
+                </ul>
+            </section>
+
+            <section id="user-experience">
+                <h2>User Experience</h2>
+                <ul>
+                    <li>Show progress indicators for all downloads</li>
+                    <li>Allow users to pause/resume downloads</li>
+                    <li>Notify users when downloads complete in background</li>
+                    <li>Provide option to download over WiFi only</li>
+                    <li>Show estimated time remaining when possible</li>
+                </ul>
+            </section>
+
+            <section id="testing">
+                <h2>Testing</h2>
+                <ul>
+                    <li>Test with slow network conditions</li>
+                    <li>Test interruptions (phone calls, airplane mode)</li>
+                    <li>Test with various file sizes (small, medium, large)</li>
+                    <li>Test authentication failures and retries</li>
+                    <li>Test low disk space scenarios</li>
+                </ul>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 BICurlDownloader. All rights reserved.</p>
+                <p>Documentation Version 1.0.0 | Framework Version 1.0.0</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - BICurlDownloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>BICurlDownloader</h1>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="overview.html">Overview</a></li>
+                    <li><a href="installation.html">Installation</a></li>
+                    <li><a href="quick-start.html">Quick Start</a></li>
+                    <li><a href="core-components.html">Core Components</a></li>
+                    <li><a href="usage-examples.html">Usage Examples</a></li>
+                    <li><a href="background-download.html">Background Download</a></li>
+                    <li><a href="multipart-download.html">Multipart Download</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="error-handling.html">Error Handling</a></li>
+                    <li><a href="notifications.html" class="active">Notifications</a></li>
+                    <li><a href="api-reference.html">API Reference</a></li>
+                    <li><a href="advanced-examples.html">Advanced Examples</a></li>
+                    <li><a href="best-practices.html">Best Practices</a></li>
+                    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Notifications</h1>
+            <p class="subtitle">Monitor downloads system-wide with NotificationCenter</p>
+
+            <section id="overview">
+                <h2>Overview</h2>
+                <p>BICurlDownloader posts notifications through <code>NotificationCenter</code>, allowing any part of your app to observe download events without direct delegate connections.</p>
+
+                <div class="alert alert-info">
+                    <strong>Use Case:</strong> Notifications are perfect for updating UI in multiple view controllers, analytics tracking, or coordinating with other app components.
+                </div>
+            </section>
+
+            <section id="notification-types">
+                <h2>Notification Types</h2>
+
+                <table>
+                    <tr>
+                        <th>Notification Name</th>
+                        <th>When Posted</th>
+                        <th>UserInfo Keys</th>
+                    </tr>
+                    <tr>
+                        <td><code>managerStateDidChange</code></td>
+                        <td>Manager state changes</td>
+                        <td><code>activeTasksCount</code>, <code>queuedTasksCount</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>taskDidStart</code></td>
+                        <td>Download starts</td>
+                        <td><code>task</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>taskDidUpdateProgress</code></td>
+                        <td>Progress updates</td>
+                        <td><code>task</code>, <code>progress</code>, <code>bytesDownloaded</code>, <code>totalBytes</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>taskDidComplete</code></td>
+                        <td>Download completes</td>
+                        <td><code>task</code>, <code>filePath</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>taskDidFail</code></td>
+                        <td>Download fails</td>
+                        <td><code>task</code>, <code>error</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>taskDidPause</code></td>
+                        <td>Download paused</td>
+                        <td><code>task</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>taskDidResume</code></td>
+                        <td>Download resumed</td>
+                        <td><code>task</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>taskDidCancel</code></td>
+                        <td>Download cancelled</td>
+                        <td><code>task</code></td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="basic-usage">
+                <h2>Basic Usage</h2>
+
+                <h3>Swift Implementation</h3>
+                <pre><code>import BICurlDownloader
+
+class DownloadObserver {
+    
+    init() {
+        setupNotifications()
+    }
+    
+    private func setupNotifications() {
+        let center = NotificationCenter.default
+        
+        // Observe all download events
+        center.addObserver(
+            self,
+            selector: #selector(downloadStarted(_:)),
+            name: BIDownloadNotification.taskDidStart,
+            object: nil
+        )
+        
+        center.addObserver(
+            self,
+            selector: #selector(downloadProgress(_:)),
+            name: BIDownloadNotification.taskDidUpdateProgress,
+            object: nil
+        )
+        
+        center.addObserver(
+            self,
+            selector: #selector(downloadCompleted(_:)),
+            name: BIDownloadNotification.taskDidComplete,
+            object: nil
+        )
+        
+        center.addObserver(
+            self,
+            selector: #selector(downloadFailed(_:)),
+            name: BIDownloadNotification.taskDidFail,
+            object: nil
+        )
+    }
+    
+    @objc private func downloadStarted(_ notification: Notification) {
+        guard let task = notification.userInfo?["task"] as? BIDownloadTask else { return }
+        print("Download started: \(task.url.lastPathComponent)")
+    }
+    
+    @objc private func downloadProgress(_ notification: Notification) {
+        guard let task = notification.userInfo?["task"] as? BIDownloadTask,
+              let progress = notification.userInfo?["progress"] as? Double else { return }
+        
+        let percentage = Int(progress * 100)
+        print("\(task.url.lastPathComponent): \(percentage)%")
+    }
+    
+    @objc private func downloadCompleted(_ notification: Notification) {
+        guard let task = notification.userInfo?["task"] as? BIDownloadTask,
+              let filePath = notification.userInfo?["filePath"] as? String else { return }
+        
+        print("Completed: \(filePath)")
+    }
+    
+    @objc private func downloadFailed(_ notification: Notification) {
+        guard let task = notification.userInfo?["task"] as? BIDownloadTask,
+              let error = notification.userInfo?["error"] as? Error else { return }
+        
+        print("Failed: \(error.localizedDescription)")
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+}</code></pre>
+
+                <h3>Objective-C Implementation</h3>
+                <pre><code>@implementation DownloadObserver
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [self setupNotifications];
+    }
+    return self;
+}
+
+- (void)setupNotifications {
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    
+    [center addObserver:self
+               selector:@selector(downloadStarted:)
+                   name:BIDownloadNotificationTaskDidStart
+                 object:nil];
+    
+    [center addObserver:self
+               selector:@selector(downloadProgress:)
+                   name:BIDownloadNotificationTaskDidUpdateProgress
+                 object:nil];
+    
+    [center addObserver:self
+               selector:@selector(downloadCompleted:)
+                   name:BIDownloadNotificationTaskDidComplete
+                 object:nil];
+    
+    [center addObserver:self
+               selector:@selector(downloadFailed:)
+                   name:BIDownloadNotificationTaskDidFail
+                 object:nil];
+}
+
+- (void)downloadStarted:(NSNotification *)notification {
+    BIDownloadTask *task = notification.userInfo[@"task"];
+    NSLog(@"Download started: %@", task.url.lastPathComponent);
+}
+
+- (void)downloadProgress:(NSNotification *)notification {
+    BIDownloadTask *task = notification.userInfo[@"task"];
+    NSNumber *progressNumber = notification.userInfo[@"progress"];
+    double progress = [progressNumber doubleValue];
+    
+    NSInteger percentage = (NSInteger)(progress * 100);
+    NSLog(@"%@: %ld%%", task.url.lastPathComponent, (long)percentage);
+}
+
+- (void)downloadCompleted:(NSNotification *)notification {
+    NSString *filePath = notification.userInfo[@"filePath"];
+    NSLog(@"Completed: %@", filePath);
+}
+
+- (void)downloadFailed:(NSNotification *)notification {
+    NSError *error = notification.userInfo[@"error"];
+    NSLog(@"Failed: %@", error.localizedDescription);
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+@end</code></pre>
+            </section>
+
+            <section id="filtering">
+                <h2>Filtering Notifications</h2>
+
+                <h3>Filter by Specific Task</h3>
+                <pre><code>// Swift
+class TaskSpecificObserver {
+    let taskId: String
+    
+    init(taskId: String) {
+        self.taskId = taskId
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(downloadProgress(_:)),
+            name: BIDownloadNotification.taskDidUpdateProgress,
+            object: nil
+        )
+    }
+    
+    @objc private func downloadProgress(_ notification: Notification) {
+        guard let task = notification.userInfo?["task"] as? BIDownloadTask else { return }
+        
+        // Only process notifications for our specific task
+        if task.id == taskId {
+            if let progress = notification.userInfo?["progress"] as? Double {
+                updateUI(progress: progress)
+            }
+        }
+    }
+    
+    private func updateUI(progress: Double) {
+        DispatchQueue.main.async {
+            // Update UI with progress
+        }
+    }
+}</code></pre>
+
+                <h3>Filter by Note/Tag</h3>
+                <pre><code>// Swift
+@objc private func downloadCompleted(_ notification: Notification) {
+    guard let task = notification.userInfo?["task"] as? BIDownloadTask else { return }
+    
+    // Filter by note
+    if task.note == "video-downloads" {
+        handleVideoDownloadCompleted(task)
+    } else if task.note == "document-downloads" {
+        handleDocumentDownloadCompleted(task)
+    }
+}</code></pre>
+            </section>
+
+            <section id="manager-state">
+                <h2>Manager State Notifications</h2>
+
+                <h3>Monitor Queue State</h3>
+                <pre><code>// Swift
+class QueueMonitor {
+    
+    init() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(managerStateChanged(_:)),
+            name: BIDownloadNotification.managerStateDidChange,
+            object: nil
+        )
+    }
+    
+    @objc private func managerStateChanged(_ notification: Notification) {
+        guard let activeCount = notification.userInfo?["activeTasksCount"] as? Int,
+              let queuedCount = notification.userInfo?["queuedTasksCount"] as? Int else {
+            return
+        }
+        
+        print("Active downloads: \(activeCount)")
+        print("Queued downloads: \(queuedCount)")
+        print("Total: \(activeCount + queuedCount)")
+        
+        // Update badge or UI
+        updateDownloadBadge(count: activeCount + queuedCount)
+    }
+    
+    private func updateDownloadBadge(count: Int) {
+        DispatchQueue.main.async {
+            UIApplication.shared.applicationIconBadgeNumber = count
+        }
+    }
+}</code></pre>
+
+                <h3>Objective-C Implementation</h3>
+                <pre><code>- (void)setupManagerObserver {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(managerStateChanged:)
+                                                 name:BIDownloadNotificationManagerStateDidChange
+                                               object:nil];
+}
+
+- (void)managerStateChanged:(NSNotification *)notification {
+    NSInteger activeCount = [notification.userInfo[@"activeTasksCount"] integerValue];
+    NSInteger queuedCount = [notification.userInfo[@"queuedTasksCount"] integerValue];
+    
+    NSLog(@"Active: %ld, Queued: %ld", (long)activeCount, (long)queuedCount);
+    
+    [self updateDownloadBadge:activeCount + queuedCount];
+}</code></pre>
+            </section>
+
+            <section id="ui-updates">
+                <h2>UI Updates with Notifications</h2>
+
+                <h3>Update Multiple View Controllers</h3>
+                <pre><code>// Swift
+// StatusBarViewController
+class StatusBarViewController: UIViewController {
+    @IBOutlet weak var downloadCountLabel: UILabel!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateDownloadCount(_:)),
+            name: BIDownloadNotification.managerStateDidChange,
+            object: nil
+        )
+    }
+    
+    @objc private func updateDownloadCount(_ notification: Notification) {
+        guard let activeCount = notification.userInfo?["activeTasksCount"] as? Int else {
+            return
+        }
+        
+        DispatchQueue.main.async {
+            if activeCount > 0 {
+                self.downloadCountLabel.text = "\(activeCount)"
+                self.downloadCountLabel.isHidden = false
+            } else {
+                self.downloadCountLabel.isHidden = true
+            }
+        }
+    }
+}
+
+// DownloadsListViewController
+class DownloadsListViewController: UITableViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Observe progress updates to refresh table
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(downloadProgressUpdated(_:)),
+            name: BIDownloadNotification.taskDidUpdateProgress,
+            object: nil
+        )
+    }
+    
+    @objc private func downloadProgressUpdated(_ notification: Notification) {
+        guard let task = notification.userInfo?["task"] as? BIDownloadTask else {
+            return
+        }
+        
+        // Find and update the cell for this task
+        if let indexPath = findIndexPath(for: task) {
+            DispatchQueue.main.async {
+                self.tableView.reloadRows(at: [indexPath], with: .none)
+            }
+        }
+    }
+    
+    private func findIndexPath(for task: BIDownloadTask) -> IndexPath? {
+        // Implementation to find task in data source
+        return nil
+    }
+}</code></pre>
+            </section>
+
+            <section id="analytics">
+                <h2>Analytics Integration</h2>
+
+                <h3>Track Download Events</h3>
+                <pre><code>// Swift
+class AnalyticsTracker {
+    
+    init() {
+        setupNotifications()
+    }
+    
+    private func setupNotifications() {
+        let center = NotificationCenter.default
+        
+        center.addObserver(
+            self,
+            selector: #selector(trackDownloadStart(_:)),
+            name: BIDownloadNotification.taskDidStart,
+            object: nil
+        )
+        
+        center.addObserver(
+            self,
+            selector: #selector(trackDownloadComplete(_:)),
+            name: BIDownloadNotification.taskDidComplete,
+            object: nil
+        )
+        
+        center.addObserver(
+            self,
+            selector: #selector(trackDownloadFailure(_:)),
+            name: BIDownloadNotification.taskDidFail,
+            object: nil
+        )
+    }
+    
+    @objc private func trackDownloadStart(_ notification: Notification) {
+        guard let task = notification.userInfo?["task"] as? BIDownloadTask else {
+            return
+        }
+        
+        // Track to analytics service
+        Analytics.logEvent("download_started", parameters: [
+            "url": task.url.absoluteString,
+            "file_type": task.url.pathExtension,
+            "timestamp": Date().timeIntervalSince1970
+        ])
+    }
+    
+    @objc private func trackDownloadComplete(_ notification: Notification) {
+        guard let task = notification.userInfo?["task"] as? BIDownloadTask else {
+            return
+        }
+        
+        let duration = calculateDownloadDuration(task)
+        let fileSize = task.progress.totalUnitCount
+        
+        Analytics.logEvent("download_completed", parameters: [
+            "url": task.url.absoluteString,
+            "file_size": fileSize,
+            "duration": duration,
+            "success": true
+        ])
+    }
+    
+    @objc private func trackDownloadFailure(_ notification: Notification) {
+        guard let task = notification.userInfo?["task"] as? BIDownloadTask,
+              let error = notification.userInfo?["error"] as? NSError else {
+            return
+        }
+        
+        Analytics.logEvent("download_failed", parameters: [
+            "url": task.url.absoluteString,
+            "error_code": error.code,
+            "error_message": error.localizedDescription
+        ])
+    }
+    
+    private func calculateDownloadDuration(_ task: BIDownloadTask) -> TimeInterval {
+        // Implementation to calculate duration
+        return 0
+    }
+}</code></pre>
+            </section>
+
+            <section id="throttling">
+                <h2>Progress Throttling</h2>
+                <p>Progress notifications are automatically throttled to avoid excessive updates.</p>
+
+                <h3>Built-in Throttling</h3>
+                <pre><code>// Progress updates are throttled internally
+// Maximum update frequency: ~100ms (10 updates per second)
+// This prevents UI performance issues
+
+// You receive progress updates at reasonable intervals automatically</code></pre>
+
+                <h3>Custom Throttling</h3>
+                <pre><code>// Swift - Additional throttling if needed
+class ThrottledProgressObserver {
+    private var lastUpdateTime: Date?
+    private let minimumInterval: TimeInterval = 0.5 // 500ms
+    
+    @objc private func downloadProgress(_ notification: Notification) {
+        let now = Date()
+        
+        // Check if enough time has passed
+        if let lastUpdate = lastUpdateTime,
+           now.timeIntervalSince(lastUpdate) < minimumInterval {
+            return // Skip this update
+        }
+        
+        lastUpdateTime = now
+        
+        // Process the update
+        if let progress = notification.userInfo?["progress"] as? Double {
+            updateUI(progress: progress)
+        }
+    }
+}</code></pre>
+            </section>
+
+            <section id="custom-notifications">
+                <h2>Custom Notifications</h2>
+
+                <h3>Post Your Own Notifications</h3>
+                <pre><code>// Swift
+// Define custom notification names
+extension Notification.Name {
+    static let downloadBatchCompleted = Notification.Name("downloadBatchCompleted")
+    static let allDownloadsFinished = Notification.Name("allDownloadsFinished")
+}
+
+class DownloadCoordinator {
+    private var activeDownloads: Set<String> = []
+    
+    func startBatchDownload(urls: [URL]) {
+        for url in urls {
+            let task = BIDownloadManager.shared.download(
+                url: url,
+                destinationPath: "/path/to/destination"
+            )
+            activeDownloads.insert(task.id)
+        }
+    }
+    
+    @objc private func downloadCompleted(_ notification: Notification) {
+        guard let task = notification.userInfo?["task"] as? BIDownloadTask else {
+            return
+        }
+        
+        activeDownloads.remove(task.id)
+        
+        // Check if batch is complete
+        if activeDownloads.isEmpty {
+            NotificationCenter.default.post(
+                name: .downloadBatchCompleted,
+                object: self,
+                userInfo: ["totalDownloads": urls.count]
+            )
+        }
+    }
+}</code></pre>
+            </section>
+
+            <section id="thread-safety">
+                <h2>Thread Safety</h2>
+
+                <div class="alert alert-warning">
+                    <strong>Important:</strong> Notifications may be posted from background threads. Always dispatch UI updates to the main thread.
+                </div>
+
+                <h3>Safe UI Updates</h3>
+                <pre><code>// Swift
+@objc private func downloadProgress(_ notification: Notification) {
+    guard let progress = notification.userInfo?["progress"] as? Double else {
+        return
+    }
+    
+    // ALWAYS update UI on main thread
+    DispatchQueue.main.async {
+        self.progressView.progress = Float(progress)
+        self.statusLabel.text = "\(Int(progress * 100))%"
+    }
+}
+
+// Objective-C
+- (void)downloadProgress:(NSNotification *)notification {
+    NSNumber *progressNumber = notification.userInfo[@"progress"];
+    double progress = [progressNumber doubleValue];
+    
+    // ALWAYS update UI on main thread
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.progressView.progress = (float)progress;
+        self.statusLabel.text = [NSString stringWithFormat:@"%ld%%", (long)(progress * 100)];
+    });
+}</code></pre>
+            </section>
+
+            <section id="best-practices">
+                <h2>Best Practices</h2>
+
+                <ul>
+                    <li><strong>Remove observers</strong> - Always remove observers in <code>deinit</code> or <code>dealloc</code></li>
+                    <li><strong>Use main thread for UI</strong> - Dispatch all UI updates to main thread</li>
+                    <li><strong>Filter notifications</strong> - Check task ID or note to handle only relevant events</li>
+                    <li><strong>Avoid heavy processing</strong> - Keep notification handlers lightweight</li>
+                    <li><strong>Consider throttling</strong> - Add custom throttling for progress if needed</li>
+                    <li><strong>Handle missing data</strong> - Always safely unwrap userInfo values</li>
+                    <li><strong>Use weak references</strong> - Avoid retain cycles in closures</li>
+                    <li><strong>Document custom notifications</strong> - If posting custom events</li>
+                </ul>
+
+                <h3>Memory Management Example</h3>
+                <pre><code>// Swift
+class DownloadViewController: UIViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupNotifications()
+    }
+    
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(downloadProgress(_:)),
+            name: BIDownloadNotification.taskDidUpdateProgress,
+            object: nil
+        )
+    }
+    
+    @objc private func downloadProgress(_ notification: Notification) {
+        // Use [weak self] in async closures
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.updateProgressUI()
+        }
+    }
+    
+    deinit {
+        // Critical: remove observers
+        NotificationCenter.default.removeObserver(self)
+    }
+}</code></pre>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 BICurlDownloader. All rights reserved.</p>
+                <p>Documentation Version 1.0.0 | Framework Version 1.0.0</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

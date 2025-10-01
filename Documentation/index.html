@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BICurlDownloader - Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>BICurlDownloader</h1>
+                <div class="version">Version 1.0.0</div>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="overview.html">Overview</a></li>
+                    <li><a href="installation.html">Installation</a></li>
+                    <li><a href="quick-start.html">Quick Start</a></li>
+                    <li><a href="core-components.html">Core Components</a></li>
+                    <li><a href="usage-examples.html">Usage Examples</a></li>
+                    <li><a href="background-download.html">Background Download</a></li>
+                    <li><a href="multipart-download.html">Multipart Download</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                    <li><a href="error-handling.html">Error Handling</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="api-reference.html">API Reference</a></li>
+                    <li><a href="advanced-examples.html">Advanced Examples</a></li>
+                    <li><a href="best-practices.html">Best Practices</a></li>
+                    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>BICurlDownloader Framework</h1>
+            <p class="subtitle">Complete Documentation for iOS Download Framework</p>
+
+            <section id="welcome">
+                <h2>Welcome</h2>
+                <p>BICurlDownloader is a powerful iOS framework for file downloads with support for multipart downloading, background downloads, authentication, and more.</p>
+                
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>✅ System libcurl</h4>
+                        <p>Fast and reliable downloads using system libcurl</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>✅ Multipart Downloads</h4>
+                        <p>Automatic file splitting for faster downloads</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>✅ Background Downloads</h4>
+                        <p>Continue downloads when app is in background</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>✅ Resume Support</h4>
+                        <p>Resume interrupted downloads from where they stopped</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>✅ Authentication</h4>
+                        <p>Support for Basic, Digest, Bearer, and Custom auth</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>✅ Download Queue</h4>
+                        <p>Manage multiple downloads with priority</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>✅ Progress Monitoring</h4>
+                        <p>Detailed information about download state</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>✅ Swift & Objective-C</h4>
+                        <p>Full compatibility with both languages</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="features">
+                <h2>Key Features</h2>
+                
+                <h3>Download Management</h3>
+                <ul>
+                    <li>Start, pause, resume, and cancel downloads</li>
+                    <li>Monitor download progress in real-time</li>
+                    <li>Download queue with priority management</li>
+                    <li>Limit concurrent downloads</li>
+                    <li>Download speed throttling</li>
+                    <li>Custom HTTP headers support</li>
+                </ul>
+
+                <h3>Background Operations</h3>
+                <ul>
+                    <li>Works alongside existing app audio session</li>
+                    <li>Programmatically generated silent audio playback</li>
+                    <li>Automatic audio lifecycle management</li>
+                    <li>Audio session interruption handling</li>
+                    <li>Mixing support with main app audio</li>
+                </ul>
+
+                <h3>Network Features</h3>
+                <ul>
+                    <li>HTTP Range requests support detection</li>
+                    <li>Server capabilities validation</li>
+                    <li>Network quality monitoring</li>
+                    <li>Automatic retry with exponential backoff</li>
+                    <li>SSL/TLS verification</li>
+                </ul>
+            </section>
+
+            <section id="requirements">
+                <h2>Requirements</h2>
+                <table>
+                    <tr>
+                        <th>Requirement</th>
+                        <th>Version</th>
+                    </tr>
+                    <tr>
+                        <td>iOS</td>
+                        <td>13.0+</td>
+                    </tr>
+                    <tr>
+                        <td>Swift</td>
+                        <td>5.0+</td>
+                    </tr>
+                    <tr>
+                        <td>Xcode</td>
+                        <td>12.0+</td>
+                    </tr>
+                    <tr>
+                        <td>Architecture</td>
+                        <td>arm64, x86_64</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section id="getting-started">
+                <h2>Getting Started</h2>
+                <p>Ready to get started? Check out these resources:</p>
+                
+                <div class="alert alert-info">
+                    <strong>New to BICurlDownloader?</strong><br>
+                    Start with the <a href="quick-start.html">Quick Start Guide</a> to get up and running in minutes.
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Looking for examples?</strong><br>
+                    Browse the <a href="usage-examples.html">Usage Examples</a> section for common use cases.
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Need detailed API information?</strong><br>
+                    Check the complete <a href="api-reference.html">API Reference</a> documentation.
+                </div>
+            </section>
+
+            <section id="support">
+                <h2>Support & Resources</h2>
+                
+                <h3>Documentation</h3>
+                <ul>
+                    <li><a href="overview.html">Framework Overview</a></li>
+                    <li><a href="api-reference.html">Complete API Reference</a></li>
+                    <li><a href="usage-examples.html">Code Examples</a></li>
+                    <li><a href="troubleshooting.html">Troubleshooting Guide</a></li>
+                </ul>
+
+                <h3>Community</h3>
+                <ul>
+                    <li>GitHub Repository</li>
+                    <li>Issue Tracker</li>
+                    <li>Discussions</li>
+                </ul>
+            </section>
+
+            <section id="license">
+                <h2>License</h2>
+                <p>BICurlDownloader is released under the MIT License. See LICENSE file for details.</p>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 BICurlDownloader. All rights reserved.</p>
+                <p>Documentation Version 1.0.0 | Framework Version 1.0.0</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

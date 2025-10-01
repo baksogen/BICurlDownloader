@@ -1,0 +1,590 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3E6083782E72AD7D0023CA86 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E6083772E72AD7D0023CA86 /* AudioToolbox.framework */; };
+		3E6083832E72AD940023CA86 /* BICurlDownloader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E6083802E72AD880023CA86 /* BICurlDownloader.framework */; };
+		3E6083852E72ADAA0023CA86 /* BICurlDownloader.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3E6083802E72AD880023CA86 /* BICurlDownloader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3E7ABACC2E8A993300F0BD4D /* BICurlDownloader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E6083802E72AD880023CA86 /* BICurlDownloader.framework */; };
+		3E7ABACE2E8A994B00F0BD4D /* BICurlDownloader.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3E6083802E72AD880023CA86 /* BICurlDownloader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3E7ABACF2E8A995900F0BD4D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E6083772E72AD7D0023CA86 /* AudioToolbox.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3E60837F2E72AD880023CA86 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3E6083792E72AD880023CA86 /* BICurlDownloader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3E51337A2E72AC5000C25644;
+			remoteInfo = BICurlDownloader;
+		};
+		3E6083812E72AD900023CA86 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3E6083792E72AD880023CA86 /* BICurlDownloader.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 3E5133792E72AC5000C25644;
+			remoteInfo = BICurlDownloader;
+		};
+		3E7ABACA2E8A992D00F0BD4D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3E6083792E72AD880023CA86 /* BICurlDownloader.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 3E5133792E72AC5000C25644;
+			remoteInfo = BICurlDownloader;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3E6083842E72ADA00023CA86 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3E6083852E72ADAA0023CA86 /* BICurlDownloader.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E7ABACD2E8A993E00F0BD4D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3E7ABACE2E8A994B00F0BD4D /* BICurlDownloader.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		3E6083772E72AD7D0023CA86 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		3E6083792E72AD880023CA86 /* BICurlDownloader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = BICurlDownloader.xcodeproj; sourceTree = "<group>"; };
+		3E7ABAAA2E8A97CE00F0BD4D /* BICurlDownloaderExampleObjC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BICurlDownloaderExampleObjC.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3EBEEF682E72ACED00AF9B29 /* BICurlDownloaderExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BICurlDownloaderExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		3E7ABAC22E8A97D000F0BD4D /* Exceptions for "BICurlDownloaderExampleObjC" folder in "BICurlDownloaderExampleObjC" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3E7ABAA92E8A97CE00F0BD4D /* BICurlDownloaderExampleObjC */;
+		};
+		3EBEEF7A2E72ACEF00AF9B29 /* Exceptions for "BICurlDownloaderExample" folder in "BICurlDownloaderExample" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				ObjectiveCExample.m,
+			);
+			target = 3EBEEF672E72ACED00AF9B29 /* BICurlDownloaderExample */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		3E7ABAAB2E8A97CE00F0BD4D /* BICurlDownloaderExampleObjC */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3E7ABAC22E8A97D000F0BD4D /* Exceptions for "BICurlDownloaderExampleObjC" folder in "BICurlDownloaderExampleObjC" target */,
+			);
+			path = BICurlDownloaderExampleObjC;
+			sourceTree = "<group>";
+		};
+		3EBEEF6A2E72ACED00AF9B29 /* BICurlDownloaderExample */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3EBEEF7A2E72ACEF00AF9B29 /* Exceptions for "BICurlDownloaderExample" folder in "BICurlDownloaderExample" target */,
+			);
+			path = BICurlDownloaderExample;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3E7ABAA72E8A97CE00F0BD4D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E7ABACF2E8A995900F0BD4D /* AudioToolbox.framework in Frameworks */,
+				3E7ABACC2E8A993300F0BD4D /* BICurlDownloader.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3EBEEF652E72ACED00AF9B29 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E6083832E72AD940023CA86 /* BICurlDownloader.framework in Frameworks */,
+				3E6083782E72AD7D0023CA86 /* AudioToolbox.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3E6083762E72AD7D0023CA86 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3E6083772E72AD7D0023CA86 /* AudioToolbox.framework */,
+				3E6083792E72AD880023CA86 /* BICurlDownloader.xcodeproj */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3E60837A2E72AD880023CA86 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3E6083802E72AD880023CA86 /* BICurlDownloader.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3EBEEF5F2E72ACED00AF9B29 = {
+			isa = PBXGroup;
+			children = (
+				3EBEEF6A2E72ACED00AF9B29 /* BICurlDownloaderExample */,
+				3E7ABAAB2E8A97CE00F0BD4D /* BICurlDownloaderExampleObjC */,
+				3E6083762E72AD7D0023CA86 /* Frameworks */,
+				3EBEEF692E72ACED00AF9B29 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3EBEEF692E72ACED00AF9B29 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3EBEEF682E72ACED00AF9B29 /* BICurlDownloaderExample.app */,
+				3E7ABAAA2E8A97CE00F0BD4D /* BICurlDownloaderExampleObjC.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3E7ABAA92E8A97CE00F0BD4D /* BICurlDownloaderExampleObjC */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3E7ABAC32E8A97D000F0BD4D /* Build configuration list for PBXNativeTarget "BICurlDownloaderExampleObjC" */;
+			buildPhases = (
+				3E7ABAA62E8A97CE00F0BD4D /* Sources */,
+				3E7ABAA72E8A97CE00F0BD4D /* Frameworks */,
+				3E7ABACD2E8A993E00F0BD4D /* CopyFiles */,
+				3E7ABAA82E8A97CE00F0BD4D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3E7ABACB2E8A992D00F0BD4D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3E7ABAAB2E8A97CE00F0BD4D /* BICurlDownloaderExampleObjC */,
+			);
+			name = BICurlDownloaderExampleObjC;
+			packageProductDependencies = (
+			);
+			productName = BICurlDownloaderExampleObjC;
+			productReference = 3E7ABAAA2E8A97CE00F0BD4D /* BICurlDownloaderExampleObjC.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3EBEEF672E72ACED00AF9B29 /* BICurlDownloaderExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3EBEEF7B2E72ACEF00AF9B29 /* Build configuration list for PBXNativeTarget "BICurlDownloaderExample" */;
+			buildPhases = (
+				3EBEEF642E72ACED00AF9B29 /* Sources */,
+				3EBEEF652E72ACED00AF9B29 /* Frameworks */,
+				3E6083842E72ADA00023CA86 /* CopyFiles */,
+				3EBEEF662E72ACED00AF9B29 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3E6083822E72AD900023CA86 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3EBEEF6A2E72ACED00AF9B29 /* BICurlDownloaderExample */,
+			);
+			name = BICurlDownloaderExample;
+			packageProductDependencies = (
+			);
+			productName = BICurlDownloaderExample;
+			productReference = 3EBEEF682E72ACED00AF9B29 /* BICurlDownloaderExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3EBEEF602E72ACED00AF9B29 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					3E7ABAA92E8A97CE00F0BD4D = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
+					3EBEEF672E72ACED00AF9B29 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+				};
+			};
+			buildConfigurationList = 3EBEEF632E72ACED00AF9B29 /* Build configuration list for PBXProject "BICurlDownloaderExample" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3EBEEF5F2E72ACED00AF9B29;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 3EBEEF692E72ACED00AF9B29 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 3E60837A2E72AD880023CA86 /* Products */;
+					ProjectRef = 3E6083792E72AD880023CA86 /* BICurlDownloader.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				3EBEEF672E72ACED00AF9B29 /* BICurlDownloaderExample */,
+				3E7ABAA92E8A97CE00F0BD4D /* BICurlDownloaderExampleObjC */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		3E6083802E72AD880023CA86 /* BICurlDownloader.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = BICurlDownloader.framework;
+			remoteRef = 3E60837F2E72AD880023CA86 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3E7ABAA82E8A97CE00F0BD4D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3EBEEF662E72ACED00AF9B29 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3E7ABAA62E8A97CE00F0BD4D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3EBEEF642E72ACED00AF9B29 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3E6083822E72AD900023CA86 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BICurlDownloader;
+			targetProxy = 3E6083812E72AD900023CA86 /* PBXContainerItemProxy */;
+		};
+		3E7ABACB2E8A992D00F0BD4D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BICurlDownloader;
+			targetProxy = 3E7ABACA2E8A992D00F0BD4D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3E7ABAC02E8A97D000F0BD4D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N2B5NKRGT8;
+				FRAMEWORK_SEARCH_PATHS = " $(BUILT_PRODUCTS_DIR)";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BICurlDownloaderExampleObjC/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.biomsoft.BICurlDownloaderExampleObjC;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3E7ABAC12E8A97D000F0BD4D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N2B5NKRGT8;
+				FRAMEWORK_SEARCH_PATHS = " $(BUILT_PRODUCTS_DIR)";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BICurlDownloaderExampleObjC/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.biomsoft.BICurlDownloaderExampleObjC;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3EBEEF7C2E72ACEF00AF9B29 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N2B5NKRGT8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BICurlDownloaderExample/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.biomsoft.BICurlDownloaderExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3EBEEF7D2E72ACEF00AF9B29 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N2B5NKRGT8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BICurlDownloaderExample/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.biomsoft.BICurlDownloaderExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3EBEEF7E2E72ACEF00AF9B29 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = N2B5NKRGT8;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3EBEEF7F2E72ACEF00AF9B29 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = N2B5NKRGT8;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3E7ABAC32E8A97D000F0BD4D /* Build configuration list for PBXNativeTarget "BICurlDownloaderExampleObjC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3E7ABAC02E8A97D000F0BD4D /* Debug */,
+				3E7ABAC12E8A97D000F0BD4D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3EBEEF632E72ACED00AF9B29 /* Build configuration list for PBXProject "BICurlDownloaderExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3EBEEF7E2E72ACEF00AF9B29 /* Debug */,
+				3EBEEF7F2E72ACEF00AF9B29 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3EBEEF7B2E72ACEF00AF9B29 /* Build configuration list for PBXNativeTarget "BICurlDownloaderExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3EBEEF7C2E72ACEF00AF9B29 /* Debug */,
+				3EBEEF7D2E72ACEF00AF9B29 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3EBEEF602E72ACED00AF9B29 /* Project object */;
+}
