@@ -34,9 +34,39 @@ if [ ! -d "${PROJECT_NAME}" ]; then
     exit 1
 fi
 
-# Показываем доступные схемы
-echo -e "${BLUE}Available schemes:${NC}"
-xcodebuild -project "${PROJECT_NAME}" -list | grep -A 100 "Schemes:" || true
+# Проверка наличия curl.xcframework
+CURL_FRAMEWORK_PATH="BICurlDownloader/External/curl-ios/curl.xcframework"
+if [ ! -d "${CURL_FRAMEWORK_PATH}" ]; then
+    echo -e "${RED}========================================${NC}"
+    echo -e "${RED}ERROR: curl.xcframework not found!${NC}"
+    echo -e "${RED}========================================${NC}"
+    echo ""
+    echo -e "${YELLOW}Before building BICurlDownloader, you need to build curl.xcframework:${NC}"
+    echo ""
+    echo -e "${BLUE}1. Clone the curl-ios repository:${NC}"
+    echo -e "   cd /path/to/workspace"
+    echo -e "   git clone https://github.com/tls-inspector/curl-ios.git"
+    echo -e "   cd curl-ios"
+    echo ""
+    echo -e "${BLUE}2. Build curl.xcframework:${NC}"
+    echo -e "   chmod +x build-ios.sh"
+    echo -e "   ./build-ios.sh"
+    echo ""
+    echo -e "${BLUE}3. Copy to BICurlDownloader:${NC}"
+    echo -e "   cp -R curl.xcframework $(pwd)/BICurlDownloader/External/curl-ios/"
+    echo ""
+    echo -e "${YELLOW}For more details, see BUILD_INSTRUCTIONS.md${NC}"
+    echo ""
+    exit 1
+fi
+
+echo -e "${GREEN}✓ curl.xcframework found${NC}"
+
+# Показываем информацию о сборке
+echo -e "${BLUE}Build Configuration:${NC}"
+echo -e "  Project: ${PROJECT_NAME}"
+echo -e "  Scheme: ${SCHEME_NAME}"
+echo -e "  curl.xcframework: ${GREEN}✓ Found${NC}"
 echo ""
 
 # Очистка предыдущих сборок

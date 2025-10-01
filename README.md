@@ -2,6 +2,8 @@
 
 BICurlDownloader is a powerful and flexible iOS framework that provides multi-threaded file downloads using the system libcurl library with background operation support through programmatically generated silent audio.
 
+> 📚 **New to this project?** Check out the [Documentation Index](DOCUMENTATION_INDEX.md) for a complete guide to all available documentation.
+
 ## Key Features
 
 - ✅ **Multi-threaded downloading** - automatic file splitting for parallel downloads
@@ -20,6 +22,46 @@ BICurlDownloader is a powerful and flexible iOS framework that provides multi-th
 - Xcode 12.0+
 - libcurl (system library)
 
+## Building the Framework
+
+### Prerequisites
+
+Before building BICurlDownloader, you need to build the curl-ios framework:
+
+1. Clone the curl-ios repository:
+```bash
+cd /path/to/your/workspace
+git clone https://github.com/tls-inspector/curl-ios.git
+cd curl-ios
+```
+
+2. Build the curl.xcframework:
+```bash
+chmod +x build-ios.sh
+./build-ios.sh
+```
+
+This will create `curl.xcframework` which is required by BICurlDownloader.
+
+3. Copy the generated `curl.xcframework` to the BICurlDownloader project:
+```bash
+cp -R curl.xcframework /path/to/BICurlDownloader/BICurlDownloader/External/curl-ios/
+```
+
+### Building BICurlDownloader
+
+Once curl.xcframework is in place, build the BICurlDownloader framework:
+
+```bash
+cd /path/to/BICurlDownloader
+chmod +x build.sh
+./build.sh
+```
+
+The resulting `BICurlDownloader.xcframework` will be created in the `Result/` directory.
+
+For detailed build instructions, see [BUILD_INSTRUCTIONS.md](BUILD_INSTRUCTIONS.md).
+
 ## Installation
 
 ### Swift Package Manager
@@ -28,7 +70,7 @@ Add the following dependency to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/YourUsername/BICurlDownloader.git", from: "1.0.0")
+    .package(url: "https://github.com/baksogen/BICurlDownloader.git", from: "1.0.0")
 ]
 ```
 
@@ -368,7 +410,7 @@ We welcome contributions to the project! Please check [CONTRIBUTING.md](CONTRIBU
 
 ## Support
 
-- GitHub Issues: [https://github.com/YourUsername/BICurlDownloader/issues](https://github.com/YourUsername/BICurlDownloader/issues)
+- GitHub Issues: [https://github.com/baksogen/BICurlDownloader/issues](https://github.com/baksogen/BICurlDownloader/issues)
 - Email: support@example.com
 - Documentation: [https://bicurldownloader.docs.com](https://bicurldownloader.docs.com)
 

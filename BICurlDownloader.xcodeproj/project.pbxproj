@@ -6,13 +6,8 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		3EB508222E72BCB0007F6EC4 /* curl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EB508212E72BCB0007F6EC4 /* curl.xcframework */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		3E51337A2E72AC5000C25644 /* BICurlDownloader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BICurlDownloader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3EB508212E72BCB0007F6EC4 /* curl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = curl.xcframework; path = "curl-ios/curl.xcframework"; sourceTree = "<group>"; };
 		3EB508322E72FA3A007F6EC4 /* CoreAudioTypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioTypes.framework; path = System/Library/Frameworks/CoreAudioTypes.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -42,7 +37,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3EB508222E72BCB0007F6EC4 /* curl.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,7 +64,6 @@
 			isa = PBXGroup;
 			children = (
 				3EB508322E72FA3A007F6EC4 /* CoreAudioTypes.framework */,
-				3EB508212E72BCB0007F6EC4 /* curl.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
